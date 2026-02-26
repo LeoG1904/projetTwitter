@@ -5,8 +5,28 @@
 
   &__content {
     flex: 1;
-    margin-left: 260px; // largeur exacte de la sidebar
+    margin-left: 260px;
     padding: 20px 40px;
-    max-width: 800px; // largeur feed type Twitter
+    max-width: 800px;
+    width: 100%;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1200px) {
+  .layout__content {
+    margin-left: 80px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .layout__content {
+    margin-left: 0;
+    padding-bottom: 90px; // espace pour bottom nav
   }
 }
