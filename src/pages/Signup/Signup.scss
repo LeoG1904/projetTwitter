@@ -1,4 +1,4 @@
-.login {
+.signup {
   width: 100vw;
   min-height: 100vh;
   background-color: #f5f8fa;
@@ -63,7 +63,7 @@
 /* MOBILE ADJUSTMENTS (<480px)   */
 /* ============================= */
 @media (max-width: 480px) {
-  .login {
+  .signup {
     padding: 15px;
 
     &__card {

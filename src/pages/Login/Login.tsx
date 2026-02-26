@@ -4,7 +4,8 @@ import {
   Paper,
   TextField,
   Typography,
-  Button
+  Button,
+  Link
 } from "@mui/material";
 
 import "./Login.scss";
@@ -15,8 +16,12 @@ export default function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // ⚠️ Temporaire (pas de vraie auth)
+    // ⚠️ Temporaire : pas de vraie auth
     navigate("/home");
+  };
+
+  const goToSignup = () => {
+    navigate("/signup");
   };
 
   return (
@@ -52,6 +57,16 @@ export default function Login() {
             Login
           </Button>
         </form>
+
+        {/* Footer : lien vers Signup */}
+        <Box className="login__footer">
+          <Typography variant="body2">
+            Don’t have an account?{" "}
+            <Link component="button" onClick={goToSignup}>
+              Sign up
+            </Link>
+          </Typography>
+        </Box>
       </Paper>
     </Box>
   );

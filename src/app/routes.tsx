@@ -4,7 +4,7 @@ import Home from "../pages/Home";
 import Profile from "../pages/Profile";
 import Notifications from "../pages/Notification";
 import Login from "../pages/Login/Login";
-import Signup from "../pages/Signup";
+import Signup from "../pages/Signup/Signup";
 import MainLayout from "../ui/Layouts/MainLayout/MainLayout";
 
 export default function AppRoutes() {
