@@ -2,20 +2,21 @@
   display: flex;
   min-height: 100vh;
   background-color: #f5f8fa;
+  justify-content: center; // centre horizontalement tout le layout
 
   &__content {
-    flex: 1;
-    margin-left: 260px;
-    padding: 20px 40px;
-    max-width: 800px;
     width: 100%;
+    max-width: 800px; // largeur du feed
+    padding: 20px 40px;
+    margin-left: 260px; // espace pour la sidebar
+    box-sizing: border-box;
   }
 }
 
 /* Tablet */
 @media (max-width: 1200px) {
   .layout__content {
-    margin-left: 80px;
+    margin-left: 80px; // sidebar compacte
   }
 }
 
@@ -23,10 +24,13 @@
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
+    align-items: center; // centre le contenu verticalement
   }
 
   .layout__content {
-    margin-left: 0;
+    margin-left: 0; // pas de sidebar
+    width: 100%;
+    max-width: 100%;
     padding-bottom: 90px; // espace pour bottom nav
   }
 }

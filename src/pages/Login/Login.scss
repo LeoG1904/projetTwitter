@@ -1,0 +1,52 @@
+.login {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #f5f8fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box; // important pour éviter le débordement
+
+  &__card {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-sizing: border-box;
+  }
+
+  &__title {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__button {
+    background-color: #1da1f2;
+    color: white;
+
+    &:hover {
+      background-color: #1991db;
+    }
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .login {
+    padding: 15px;
+
+    &__card {
+      padding: 25px;
+    }
+  }
+}
