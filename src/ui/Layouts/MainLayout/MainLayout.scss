@@ -1,0 +1,12 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f8fa;
+
+  &__content {
+    flex: 1;
+    margin-left: 260px; // largeur exacte de la sidebar
+    padding: 20px 40px;
+    max-width: 800px; // largeur feed type Twitter
+  }
+}
