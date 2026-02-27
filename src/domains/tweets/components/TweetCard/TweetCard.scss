@@ -1,0 +1,15 @@
+.tweet-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  width: 100%;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: #f5f8fa;
+  }
+}
