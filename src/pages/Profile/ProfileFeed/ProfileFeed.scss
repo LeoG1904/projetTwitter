@@ -1,0 +1,14 @@
+.profile__feed {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+  border-top: 1px solid #e6ecf0;
+  background-color: #fafafa;
+  border-radius: 8px;
+
+  p, span {
+    font-size: 0.95rem;
+    color: #657786;
+  }
+}

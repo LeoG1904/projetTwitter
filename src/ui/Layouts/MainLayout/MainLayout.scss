@@ -1,36 +1,28 @@
 .layout {
   display: flex;
-  min-height: 100vh;
+  min-height: 100vh; /* occupe tout l’écran */
   background-color: #f5f8fa;
-  justify-content: center; // centre horizontalement tout le layout
 
   &__content {
+    flex: 1;
+    max-width: 600px; /* largeur centrale */
     width: 100%;
-    max-width: 800px; // largeur du feed
-    padding: 20px 40px;
-    margin-left: 260px; // espace pour la sidebar
+    margin: 0 auto;    /* centre horizontalement */
+    padding: 20px;
     box-sizing: border-box;
   }
-}
 
-/* Tablet */
-@media (max-width: 1200px) {
-  .layout__content {
-    margin-left: 80px; // sidebar compacte
-  }
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .layout {
+  /* ====================== */
+  /* MOBILE */
+  /* ====================== */
+  @media (max-width: 768px) {
     flex-direction: column;
-    align-items: center; // centre le contenu verticalement
-  }
 
-  .layout__content {
-    margin-left: 0; // pas de sidebar
-    width: 100%;
-    max-width: 100%;
-    padding-bottom: 90px; // espace pour bottom nav
+    &__content {
+      max-width: 100%;
+      margin-left: 0;
+      padding: 16px;
+      padding-bottom: 90px; /* espace pour bottom nav */
+    }
   }
 }

@@ -1,0 +1,104 @@
+.profile__header {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+  /* ====================== */
+  /* AVATAR + INFO */
+  /* ====================== */
+  &__avatar-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  &__avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid #1da1f2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+    background-color: #fff;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f1419;
+  }
+
+  &__username {
+    font-size: 0.95rem;
+    color: #657786;
+  }
+
+  &__bio {
+    font-size: 0.95rem;
+    color: #333;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  /* ====================== */
+  /* BOUTON FOLLOW */
+  /* ====================== */
+  &__follow-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    border-radius: 30px;
+    text-transform: none;
+    font-weight: 600;
+    padding: 8px 20px;
+    border: 2px solid #1da1f2;
+    background-color: #ffffff;
+    color: #1da1f2;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #1da1f2;
+      color: #fff;
+    }
+  }
+
+  /* ====================== */
+  /* RESPONSIVE */
+  /* ====================== */
+  @media (max-width: 768px) {
+    padding: 16px;
+    gap: 14px;
+
+    &__avatar {
+      width: 70px;
+      height: 70px;
+    }
+
+    &__name {
+      font-size: 1.2rem;
+    }
+
+    &__username,
+    &__bio {
+      font-size: 0.85rem;
+    }
+
+    &__follow-btn {
+      top: 16px;
+      right: 16px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+    }
+  }
+}
