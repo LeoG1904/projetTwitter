@@ -1,5 +1,5 @@
-import TweetCard from "../domains/tweets/components/TweetCard/TweetCard";
-import TweetForm from "../domains/tweets/components/TweetForm/TweetForm";
+import TweetCard from "../../domains/tweets/components/TweetCard/TweetCard";
+import TweetForm from "../../domains/tweets/components/TweetForm/TweetForm";
 import "./Home.scss";
 
 function Home() {

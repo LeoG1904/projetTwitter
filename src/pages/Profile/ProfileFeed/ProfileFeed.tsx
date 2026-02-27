@@ -41,7 +41,7 @@ export default function ProfileFeed() {
   ];
 
   return (
-    <Box className="profile__feed" display="flex" flexDirection="column" gap={16}>
+    <Box className="profile__feed" >
       {mockTweets.map((tweet) => (
         <TweetCard
           key={tweet.id}
