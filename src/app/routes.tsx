@@ -2,10 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "../pages/Home/Home";
 import Profile from "../pages/Profile/Profile";
-import Notifications from "../pages/Notification";
 import Login from "../pages/Login/Login";
 import Signup from "../pages/Signup/Signup";
 import MainLayout from "../ui/Layouts/MainLayout/MainLayout";
+import Notifications from "../pages/Notifications/Notifications";
 
 export default function AppRoutes() {
   return (

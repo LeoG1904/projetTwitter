@@ -1,0 +1,16 @@
+.notifications {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;             // espace entre chaque notification
+  padding: 16px;          // padding intérieur
+  max-width: 600px;       // largeur max du feed
+  margin: 0 auto;         // centre horizontalement
+  min-height: 100vh;      // pour prendre tout l'écran
+  box-sizing: border-box;
+
+  /* optionnel : style responsive */
+  @media (max-width: 768px) {
+    padding: 12px;
+    gap: 10px;
+  }
+}
