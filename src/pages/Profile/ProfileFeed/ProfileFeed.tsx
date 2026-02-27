@@ -44,7 +44,7 @@ export default function ProfileFeed() {
     <Box className="profile__feed" >
       {mockTweets.map((tweet) => (
         <TweetCard
-          key={tweet.id}
+          id={tweet.id}
           avatar={tweet.avatar}
           name={tweet.name}
           username={tweet.username}
@@ -53,6 +53,7 @@ export default function ProfileFeed() {
           likes={tweet.likes}
           retweets={tweet.retweets}
           replies={tweet.replies}
+          currentUser="@janedoe"
         />
       ))}
     </Box>

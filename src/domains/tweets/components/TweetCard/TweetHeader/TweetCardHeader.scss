@@ -1,7 +1,8 @@
-.tweet-card__header {
+.tweet-card-header {
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  align-items: center;
+  gap: 10px;
+  position: relative;
 
   &__avatar {
     width: 48px;
@@ -11,17 +12,28 @@
   &__info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
   }
 
   &__name {
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: #0f1419;
+    font-weight: 600;
   }
 
   &__username {
-    font-size: 0.85rem;
     color: #657786;
+  }
+
+  &__actions {
+    margin-left: auto;
+    display: flex;
+    gap: 4px;
+
+    .MuiIconButton-root {
+      color: #1da1f2;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba(29, 161, 242, 0.1);
+      }
+    }
   }
 }

@@ -82,7 +82,7 @@ function Home() {
 
       {displayedTweets.map((tweet) => (
         <TweetCard
-          key={tweet.id}
+          id={tweet.id}
           avatar={tweet.avatar}
           name={tweet.name}
           username={tweet.username}
@@ -91,6 +91,7 @@ function Home() {
           likes={tweet.likes}
           retweets={tweet.retweets}
           replies={tweet.replies}
+          currentUser="@janedoe"
         />
       ))}
     </div>
