@@ -1,0 +1,17 @@
+.home {
+  display: flex;
+  flex-direction: column; // empile les éléments verticalement
+  align-items: center;    // centre horizontalement
+  width: 100%;
+  max-width: 600px;       // correspond au max-width de tes cards
+  margin: 0 auto;         // centrage horizontal sur toute la page
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 16px;              // espace entre TweetForm et TweetCards
+
+  /* optionnel : responsive */
+  @media (max-width: 768px) {
+    padding: 16px;
+    gap: 12px;
+  }
+}

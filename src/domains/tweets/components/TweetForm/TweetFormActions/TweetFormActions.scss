@@ -1,0 +1,9 @@
+.tweet-form__actions {
+  display: flex;
+  justify-content: flex-end;
+
+  &__button {
+    text-transform: none;
+    font-weight: 600;
+  }
+}

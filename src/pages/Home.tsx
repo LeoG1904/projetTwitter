@@ -1,7 +1,8 @@
 import TweetCard from "../domains/tweets/components/TweetCard/TweetCard";
+import TweetForm from "../domains/tweets/components/TweetForm/TweetForm";
+import "./Home.scss";
 
 function Home() {
-  // données fictives pour test
   const mockTweet = {
     avatar: "https://i.pravatar.cc/150?img=32",
     name: "Jane Doe",
@@ -13,8 +14,13 @@ function Home() {
     replies: 3,
   };
 
+  const handleTweet = (content: string) => {
+    console.log("Tweet envoyé :", content);
+  };
+
   return (
-    <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
+    <div className="home">
+      <TweetForm avatar="https://i.pravatar.cc/150?img=32" onTweet={handleTweet} />
       <TweetCard
         avatar={mockTweet.avatar}
         name={mockTweet.name}

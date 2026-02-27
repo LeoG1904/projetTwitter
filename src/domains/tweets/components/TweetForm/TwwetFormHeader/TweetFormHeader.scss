@@ -1,0 +1,14 @@
+.tweet-form__header {
+  display: flex;
+  gap: 12px;
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  &__textarea {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+}
