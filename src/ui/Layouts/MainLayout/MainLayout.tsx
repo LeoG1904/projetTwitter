@@ -7,7 +7,7 @@ import "./MainLayout.scss";
 export default function MainLayout() {
   return (
     <Box className="layout">
-      <Sidebar />
+      <Sidebar notificationCount={10}/>
 
       <Box className="layout__content">
         <Outlet />

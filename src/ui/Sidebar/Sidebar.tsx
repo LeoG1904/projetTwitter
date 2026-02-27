@@ -1,12 +1,16 @@
 import { NavLink } from "react-router-dom";
-import { Box, Typography, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { Box, Typography, List, ListItemButton, ListItemIcon, ListItemText, Badge } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
 import "./Sidebar.scss";
 
-export default function Sidebar() {
+interface SidebarProps {
+  notificationCount?: number;
+}
+
+export default function Sidebar({ notificationCount = 0 }: SidebarProps) {
   return (
     <Box className="sidebar">
       <Typography variant="h5" className="sidebar__logo">
@@ -50,7 +54,10 @@ export default function Sidebar() {
         >
           <ListItemButton>
             <ListItemIcon>
-              <NotificationsIcon />
+              {/* Badge pour le nombre de notifications */}
+              <Badge badgeContent={notificationCount} color="error">
+                <NotificationsIcon />
+              </Badge>
             </ListItemIcon>
             <ListItemText primary="Notifications" />
           </ListItemButton>
