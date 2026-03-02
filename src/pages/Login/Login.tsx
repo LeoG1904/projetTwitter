@@ -1,23 +1,37 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import {
   Box,
   Paper,
   TextField,
   Typography,
   Button,
-  Link
+  Link,
+  Alert,
+  CircularProgress
 } from "@mui/material";
 
 import "./Login.scss";
+import { login } from "../../domains/auth/slice";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ✅ State local pour le formulaire
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // ⚠️ Temporaire : pas de vraie auth
-    navigate("/home");
+    const result = await dispatch(login({ email, password }));
+
+    if (login.fulfilled.match(result)) {
+      navigate("/home");
+    }
   };
 
   const goToSignup = () => {
@@ -37,6 +51,9 @@ export default function Login() {
             variant="outlined"
             fullWidth
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            margin="normal"
           />
 
           <TextField
@@ -45,7 +62,17 @@ export default function Login() {
             variant="outlined"
             fullWidth
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            margin="normal"
           />
+
+          {/* ✅ Affichage erreur */}
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
 
           <Button
             type="submit"
@@ -53,12 +80,13 @@ export default function Login() {
             size="large"
             fullWidth
             className="login__button"
+            sx={{ mt: 2 }}
+            disabled={loading}
           >
-            Login
+            {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
           </Button>
         </form>
 
-        {/* Footer : lien vers Signup */}
         <Box className="login__footer">
           <Typography variant="body2">
             Don’t have an account?{" "}

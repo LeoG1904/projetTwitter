@@ -1,22 +1,50 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import {
   Box,
   Paper,
   TextField,
   Typography,
   Button,
-  Link
+  Link,
+  Alert,
+  CircularProgress
 } from "@mui/material";
 
 import "./Signup.scss";
+import { register } from "../../domains/auth/slice";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 
 export default function Signup() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ✅ State local
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [localError, setLocalError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // ⚠️ Temporaire : pas de vraie création de compte
-    navigate("/home");
+
+    setLocalError(null);
+
+    // ✅ Vérification password
+    if (password !== confirmPassword) {
+      setLocalError("Passwords do not match");
+      return;
+    }
+
+    const result = await dispatch(
+      register({ username, email, password })
+    );
+
+    if (register.fulfilled.match(result)) {
+      navigate("/login");
+    }
   };
 
   const goToLogin = () => {
@@ -36,6 +64,9 @@ export default function Signup() {
             variant="outlined"
             fullWidth
             required
+            margin="normal"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
 
           <TextField
@@ -43,6 +74,9 @@ export default function Signup() {
             variant="outlined"
             fullWidth
             required
+            margin="normal"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <TextField
@@ -51,6 +85,9 @@ export default function Signup() {
             variant="outlined"
             fullWidth
             required
+            margin="normal"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           <TextField
@@ -59,7 +96,24 @@ export default function Signup() {
             variant="outlined"
             fullWidth
             required
+            margin="normal"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
+
+          {/* ✅ Erreur locale (password mismatch) */}
+          {localError && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {localError}
+            </Alert>
+          )}
+
+          {/* ✅ Erreur backend */}
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
 
           <Button
             type="submit"
@@ -67,12 +121,17 @@ export default function Signup() {
             size="large"
             fullWidth
             className="signup__button"
+            sx={{ mt: 2 }}
+            disabled={loading}
           >
-            Sign Up
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Sign Up"
+            )}
           </Button>
         </form>
 
-        {/* Lien vers Login */}
         <Box className="signup__footer">
           <Typography variant="body2">
             Already have an account?{" "}
