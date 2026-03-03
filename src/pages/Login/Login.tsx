@@ -14,6 +14,7 @@ import {
 import "./Login.scss";
 import { login } from "../../domains/auth/slice";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { loadUser } from "../../domains/users/slice";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,14 +26,14 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
+  const result = await dispatch(login({ email, password }));
 
-    const result = await dispatch(login({ email, password }));
-
-    if (login.fulfilled.match(result)) {
-      navigate("/home");
-    }
-  };
+  if (login.fulfilled.match(result)) {
+    await dispatch(loadUser());
+    navigate("/home");
+  }
+};
 
   const goToSignup = () => {
     navigate("/signup");
