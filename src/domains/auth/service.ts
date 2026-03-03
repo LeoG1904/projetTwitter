@@ -1,13 +1,9 @@
 import { loginApi, registerApi } from "./api";
 import type { LoginRequest, RegisterRequest } from "./types";
 
-
 export const loginService = async (data: LoginRequest) => {
   const result = await loginApi(data);
-
-  // on stocke le token
-  localStorage.setItem("token", result.token);
-
+  localStorage.setItem("token", result.token); // persistance du token seulement
   return result;
 };
 

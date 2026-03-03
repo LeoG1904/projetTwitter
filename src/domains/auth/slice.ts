@@ -3,7 +3,6 @@ import { loginService, registerService, logoutService } from "./service";
 import type { AuthState, LoginRequest, RegisterRequest } from "./types";
 
 const initialState: AuthState = {
-  user: null,
   token: localStorage.getItem("token"),
   loading: false,
   error: null,
@@ -13,7 +12,8 @@ export const login = createAsyncThunk(
   "auth/login",
   async (data: LoginRequest, thunkAPI) => {
     try {
-      return await loginService(data);
+      const result = await loginService(data);
+      return result.token;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -36,40 +36,17 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.user = null;
       state.token = null;
       logoutService();
     },
   },
   extraReducers: (builder) => {
     builder
-      // LOGIN
-      .addCase(login.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload;
-        state.token = action.payload.token;
-        if (action.payload.token) {
-          localStorage.setItem("token", action.payload.token);
-        }
+        state.token = action.payload;
+        localStorage.setItem("token", action.payload);
       })
       .addCase(login.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-
-      // REGISTER
-      .addCase(register.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(register.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(register.rejected, (state, action) => {
-        state.loading = false;
         state.error = action.payload as string;
       });
   },
