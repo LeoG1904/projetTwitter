@@ -6,7 +6,7 @@ import TweetCard from "../../domains/tweets/components/TweetCard/TweetCard";
 import type { RootState } from "../../app/store";
 import { loadUser } from "../../domains/users/slice";
 import { useAppDispatch } from "../../hooks/hooks";
-import { fetchTweetsThunk } from "../../domains/tweets/slice";
+import { createTweetThunk, fetchTweetsThunk } from "../../domains/tweets/slice";
 import TweetFilter from "../../domains/tweets/components/TweetFilter/TweetFilter";
 import TweetOrder from "../../domains/tweets/components/TweetOrder/TweetOrder";
 
@@ -42,8 +42,8 @@ function Home() {
 
   // 🔹 Gestion de l’envoi d’un nouveau tweet
   const handleTweet = (content: string) => {
-    console.log("Tweet envoyé :", content);
-    // 🔹 Ici tu pourras appeler createTweetThunk pour poster un tweet
+    if (!token) return; // sécurité
+    dispatch(createTweetThunk({ payload: { content }, token }));
   };
 
   // 🔹 Afficher loader si user ou tweets non chargés
