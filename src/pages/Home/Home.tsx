@@ -1,19 +1,30 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import "./Home.scss";
 import TweetForm from "../../domains/tweets/components/TweetForm/TweetForm";
-import TweetFilter from "../../domains/tweets/components/TweetFilter/TweetFilter";
-import TweetOrder from "../../domains/tweets/components/TweetOrder/TweetOrder";
 import TweetCard from "../../domains/tweets/components/TweetCard/TweetCard";
 import type { RootState } from "../../app/store";
 import { loadUser } from "../../domains/users/slice";
 import { useAppDispatch } from "../../hooks/hooks";
+import { fetchTweetsThunk } from "../../domains/tweets/slice";
+import TweetFilter from "../../domains/tweets/components/TweetFilter/TweetFilter";
+import TweetOrder from "../../domains/tweets/components/TweetOrder/TweetOrder";
 
 function Home() {
   const dispatch = useAppDispatch();
 
-  // 🔹 Récupérer le user depuis Redux
-  const { profile: user, loading } = useSelector((state: RootState) => state.user);
+  // 🔹 User depuis Redux
+  const { profile: user, loading: userLoading } = useSelector(
+    (state: RootState) => state.user
+  );
+
+  // 🔹 Tweets depuis Redux
+  const { tweets = [], loading: tweetsLoading } = useSelector(
+    (state: RootState) => state.tweets
+  );
+
+  // 🔹 Auth token
+  const { token } = useSelector((state: RootState) => state.auth);
 
   // 🔹 Charger le user si non présent
   useEffect(() => {
@@ -22,96 +33,68 @@ function Home() {
     }
   }, [user, dispatch]);
 
-  const [filter, setFilter] = useState<"all" | "following">("all");
-  const [order, setOrder] = useState<"date" | "likes" | "retweets" | "replies">("date");
-
-  const mockTweets = [
-    {
-      id: 1,
-      avatar: "https://i.pravatar.cc/150?img=32",
-      name: "Jane Doe",
-      username: "@janedoe",
-      date: new Date().getTime() - 1000 * 60 * 60, // 1h ago
-      content: "Ceci est un tweet de test !",
-      likes: 10,
-      retweets: 3,
-      replies: 2,
-      following: true,
-    },
-    {
-      id: 2,
-      avatar: "https://i.pravatar.cc/150?img=12",
-      name: "John Smith",
-      username: "@johnsmith",
-      date: new Date().getTime() - 1000 * 60 * 120, // 2h ago
-      content: "Encore un autre tweet pour tester le feed.",
-      likes: 5,
-      retweets: 1,
-      replies: 0,
-      following: false,
-    },
-    {
-      id: 3,
-      avatar: "https://i.pravatar.cc/150?img=45",
-      name: "Alice Cooper",
-      username: "@alicecooper",
-      date: new Date().getTime() - 1000 * 60 * 180, // 3h ago
-      content: "Dernier tweet fictif pour voir comment ça rend !",
-      likes: 20,
-      retweets: 8,
-      replies: 5,
-      following: true,
-    },
-  ];
-
-  // 🔹 Filtrer les tweets
-  let displayedTweets = mockTweets.filter((t) => (filter === "following" ? t.following : true));
-
-  // 🔹 Trier les tweets
-  displayedTweets.sort((a, b) => {
-    switch (order) {
-      case "date":
-        return b.date - a.date;
-      case "likes":
-        return b.likes - a.likes;
-      case "retweets":
-        return b.retweets - a.retweets;
-      case "replies":
-        return b.replies - a.replies;
-      default:
-        return 0;
+  // 🔹 Charger les tweets dès que le user et le token sont prêts
+  useEffect(() => {
+    if (user && token) {
+      dispatch(fetchTweetsThunk(token));
     }
-  });
+  }, [user, token, dispatch]);
 
+  // 🔹 Gestion de l’envoi d’un nouveau tweet
   const handleTweet = (content: string) => {
     console.log("Tweet envoyé :", content);
+    // 🔹 Ici tu pourras appeler createTweetThunk pour poster un tweet
   };
 
-  // 🔹 Afficher loader si user non chargé
-  if (loading || !user) return <p>Loading...</p>;
+  // 🔹 Afficher loader si user ou tweets non chargés
+  if (userLoading || tweetsLoading || !user) return <p>Loading...</p>;
 
+  // 🔹 Transformation pour rendre compatible avec TweetCard
+  const displayedTweets = Array.isArray(tweets)
+    ? tweets.map(tweet => ({
+        id: tweet.id,
+        content: tweet.content,
+        createdAt: tweet.createdAt,
+        ownerName: `user${tweet.ownerId}`,       // temporaire
+        ownerAvatar: "https://i.pravatar.cc/150?img=32",
+        likes: tweet.likeCount,
+        retweets: 0,
+        replies: tweet.commentCount,
+      }))
+    : [];
+
+  
+  
+  const setFilter = (filter: string) => {
+    console.log("Filtre sélectionné :", filter);
+  }
+  const setOrder = (order: string) => {
+    console.log("Ordre sélectionné :", order);
+  }
+  
   return (
     <div className="home">
       <TweetForm avatar={user.avatar || ""} onTweet={handleTweet} />
-
       <div style={{ display: "flex", width: "100%", alignItems: "center", marginBottom: 12 }}>
         <TweetFilter onChange={setFilter} />
         <TweetOrder onChange={setOrder} />
       </div>
-
-      {displayedTweets.map((tweet) => (
+      {/* 🔹 Affichage simple des tweets */}
+      {displayedTweets.map(tweet => (
         <TweetCard
           key={tweet.id}
           id={tweet.id}
-          avatar={tweet.avatar}
-          name={tweet.name}
-          username={tweet.username}
-          date={`${Math.round((new Date().getTime() - tweet.date) / 60000)}m`}
+          avatar={tweet.ownerAvatar}
+          name={tweet.ownerName}
+          username={`@${tweet.ownerName}`}
+          date={`${Math.round(
+            (new Date().getTime() - new Date(tweet.createdAt).getTime()) / 60000
+          )}m`}
           content={tweet.content}
-          likes={tweet.likes}
-          retweets={tweet.retweets}
-          replies={tweet.replies}
-          currentUser={`@${user.username}`} // 🔹 Utilise le user connecté
+          likes={tweet.likes || 0}
+          retweets={tweet.retweets || 0}
+          replies={tweet.replies || 0}
+          currentUser={`@${user.username}`}
         />
       ))}
     </div>
