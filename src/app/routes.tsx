@@ -6,25 +6,33 @@ import Login from "../pages/Login/Login";
 import Signup from "../pages/Signup/Signup";
 import MainLayout from "../ui/Layouts/MainLayout/MainLayout";
 import Notifications from "../pages/Notifications/Notifications";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Redirection par défaut */}
-        <Route path="/" element={<Navigate to="/home" />} />
+        {/* Redirection racine */}
+        <Route path="/" element={<Navigate to="/login" />} />
 
-        {/* Pages principales */}
-        <Route element={<MainLayout />}>
+        {/* Routes protégées avec layout */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/home" element={<Home />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/notifications" element={<Notifications />} />
         </Route>
-        {/* Auth (sans protection pour l’instant) */}
+
+        {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Route inconnue → redirection vers home */}
+        {/* Catch-all */}
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </BrowserRouter>
