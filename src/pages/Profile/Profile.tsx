@@ -25,7 +25,7 @@ export default function Profile() {
         name={user.username}          // ou user.name si tu as ce champ
         username={`@${user.username}`}
         bio={user.bio || ""}          // si tu as un champ bio
-        avatar={user.avatar || "https://i.pravatar.cc/150?img=12"} // fallback si pas d'avatar
+        avatar={user.avatar || ""}    // fallback si pas d'avatar
         onFollow={handleFollow}
       />
       <ProfileStats

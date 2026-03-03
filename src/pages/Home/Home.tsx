@@ -1,11 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import "./Home.scss";
 import TweetForm from "../../domains/tweets/components/TweetForm/TweetForm";
 import TweetFilter from "../../domains/tweets/components/TweetFilter/TweetFilter";
 import TweetOrder from "../../domains/tweets/components/TweetOrder/TweetOrder";
 import TweetCard from "../../domains/tweets/components/TweetCard/TweetCard";
+import type { RootState } from "../../app/store";
+import { loadUser } from "../../domains/users/slice";
+import { useAppDispatch } from "../../hooks/hooks";
 
 function Home() {
+  const dispatch = useAppDispatch();
+
+  // 🔹 Récupérer le user depuis Redux
+  const { profile: user, loading } = useSelector((state: RootState) => state.user);
+
+  // 🔹 Charger le user si non présent
+  useEffect(() => {
+    if (!user) {
+      dispatch(loadUser());
+    }
+  }, [user, dispatch]);
+
   const [filter, setFilter] = useState<"all" | "following">("all");
   const [order, setOrder] = useState<"date" | "likes" | "retweets" | "replies">("date");
 
@@ -48,10 +64,10 @@ function Home() {
     },
   ];
 
-  // Filtrer les tweets
+  // 🔹 Filtrer les tweets
   let displayedTweets = mockTweets.filter((t) => (filter === "following" ? t.following : true));
 
-  // Trier les tweets
+  // 🔹 Trier les tweets
   displayedTweets.sort((a, b) => {
     switch (order) {
       case "date":
@@ -71,9 +87,12 @@ function Home() {
     console.log("Tweet envoyé :", content);
   };
 
+  // 🔹 Afficher loader si user non chargé
+  if (loading || !user) return <p>Loading...</p>;
+
   return (
     <div className="home">
-      <TweetForm avatar="https://i.pravatar.cc/150?img=32" onTweet={handleTweet} />
+      <TweetForm avatar={user.avatar || ""} onTweet={handleTweet} />
 
       <div style={{ display: "flex", width: "100%", alignItems: "center", marginBottom: 12 }}>
         <TweetFilter onChange={setFilter} />
@@ -82,16 +101,17 @@ function Home() {
 
       {displayedTweets.map((tweet) => (
         <TweetCard
+          key={tweet.id}
           id={tweet.id}
           avatar={tweet.avatar}
           name={tweet.name}
           username={tweet.username}
-          date={`${Math.round((new Date().getTime() - tweet.date)/60000)}m`}
+          date={`${Math.round((new Date().getTime() - tweet.date) / 60000)}m`}
           content={tweet.content}
           likes={tweet.likes}
           retweets={tweet.retweets}
           replies={tweet.replies}
-          currentUser="@janedoe"
+          currentUser={`@${user.username}`} // 🔹 Utilise le user connecté
         />
       ))}
     </div>

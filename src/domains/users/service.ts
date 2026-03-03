@@ -10,7 +10,6 @@ export const fetchCurrentUser = async (token: string): Promise<UserProfile> => {
       "Content-Type": "application/json",
     },
   });
-  console.log("Token used:", token);
 
   if (!res.ok) throw new Error("Erreur récupération user");
   return res.json();
