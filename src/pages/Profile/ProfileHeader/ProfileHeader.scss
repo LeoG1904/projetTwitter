@@ -1,102 +1,89 @@
 .profile__header {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
   padding: 24px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  position: relative;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
 
-  /* ====================== */
-  /* AVATAR + INFO */
-  /* ====================== */
+  &:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  }
+
   &__avatar-section {
     display: flex;
     align-items: flex-start;
-    gap: 18px;
+    gap: 20px;
   }
 
+  & .MuiAvatar-root,
   &__avatar {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     border: 4px solid #1da1f2;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    flex-shrink: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #fff;
   }
 
-  &__info {
+  /* boutons */
+  & > div:last-child {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+    gap: 12px;
 
-  &__name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #0f1419;
-  }
+    button {
+      border-radius: 30px;
+      font-weight: 600;
+      text-transform: none;
+      padding: 8px 24px;
+      transition: all 0.2s ease;
 
-  &__username {
-    font-size: 0.95rem;
-    color: #657786;
-  }
+      &.MuiButton-contained {
+        background-color: #1da1f2;
+        color: #fff;
 
-  &__bio {
-    font-size: 0.95rem;
-    color: #333;
-    font-style: italic;
-    line-height: 1.4;
-  }
+        &:hover {
+          background-color: #0d8ddb;
+        }
+      }
 
-  /* ====================== */
-  /* BOUTON FOLLOW */
-  /* ====================== */
-  &__follow-btn {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    border-radius: 30px;
-    text-transform: none;
-    font-weight: 600;
-    padding: 8px 20px;
-    border: 2px solid #1da1f2;
-    background-color: #ffffff;
-    color: #1da1f2;
-    transition: all 0.2s ease;
+      &.MuiButton-outlined {
+        border-color: #1da1f2;
+        color: #1da1f2;
 
-    &:hover {
-      background-color: #1da1f2;
-      color: #fff;
+        &:hover {
+          background-color: #1da1f2;
+          color: #fff;
+        }
+      }
+
+      &.MuiButton-text {
+        color: #657786;
+
+        &:hover {
+          background-color: #f5f8fa;
+        }
+      }
     }
   }
 
-  /* ====================== */
-  /* RESPONSIVE */
-  /* ====================== */
   @media (max-width: 768px) {
     padding: 16px;
-    gap: 14px;
+    gap: 16px;
 
+    &__avatar-section {
+      gap: 16px;
+    }
+
+    & .MuiAvatar-root,
     &__avatar {
-      width: 70px;
-      height: 70px;
+      width: 90px;
+      height: 90px;
     }
 
-    &__name {
-      font-size: 1.2rem;
-    }
-
-    &__username,
-    &__bio {
-      font-size: 0.85rem;
-    }
-
-    &__follow-btn {
-      top: 16px;
-      right: 16px;
+    & > div:last-child button {
       padding: 6px 16px;
       font-size: 0.85rem;
     }

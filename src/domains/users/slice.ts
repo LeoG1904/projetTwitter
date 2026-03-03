@@ -1,6 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import type { UserProfile } from "./types";
 import { fetchCurrentUser } from "./service";
+import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export const loadUser = createAsyncThunk(
   "user/loadUser",
@@ -31,7 +32,12 @@ const initialState: UserState = {
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    // 🔹 ajouter setUserProfile
+    setUserProfile: (state, action: PayloadAction<UserProfile>) => {
+      state.profile = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadUser.pending, (state) => {
@@ -50,4 +56,6 @@ const userSlice = createSlice({
   },
 });
 
+// 🔹 exporter l’action pour pouvoir l’utiliser
+export const { setUserProfile } = userSlice.actions;
 export default userSlice.reducer;
