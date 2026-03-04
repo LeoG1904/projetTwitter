@@ -25,3 +25,18 @@ export const getUserTweets = async (userId: number, token: string): Promise<Twee
   });
   return res.data;
 };
+
+export const deleteTweet = async (tweetId: number, token: string): Promise<void> => {
+  await axios.delete(`${BASE_URL}/${tweetId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+export const updateTweet = async (tweetId: number, newContent: string, token: string): Promise<Tweet> => {
+  const res = await axios.put<Tweet>(
+    `${BASE_URL}/${tweetId}`,
+    { content: newContent },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return res.data;
+};

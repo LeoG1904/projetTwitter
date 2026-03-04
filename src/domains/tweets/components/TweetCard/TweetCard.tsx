@@ -3,22 +3,31 @@ import TweetCardHeader from "./TweetHeader/TweetCardHeader";
 import TweetCardContent from "./TweetCardContent/TweetCardContent";
 import TweetCardActions from "./TweetCardActions/TweetCardActions";
 import "./TweetCard.scss";
+import { useSelector } from "react-redux";
 import type { Tweet } from "../../types";
+import { useAppDispatch } from "../../../../hooks/hooks";
+import { deleteTweetThunk, updateTweetThunk } from "../../slice";
+import type { RootState } from "../../../../app/store";
 
 interface TweetCardProps {
-  tweet: Tweet;               // ← on passe le tweet entier
-  currentUser: string;        // username connecté
-  onDelete?: (id: number) => void;
-  onEdit?: (id: number, newContent: string) => void;
+  tweet: Tweet;               
+  currentUser: string;        
 }
 
-export default function TweetCard({
-  tweet,
-  currentUser,
-  onDelete,
-  onEdit,
-}: TweetCardProps) {
+export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
+  const dispatch = useAppDispatch();
+  const token = useSelector((state: RootState) => state.auth.token);
   const isAuthor = currentUser === tweet.owner.username;
+
+  const handleDelete = () => {
+    if (!token) return;
+    dispatch(deleteTweetThunk({ tweetId: tweet.id, token }));
+  };
+
+  const handleEdit = (newContent: string) => {
+    if (!token) return;
+    dispatch(updateTweetThunk({ tweetId: tweet.id, newContent, token }));
+  };
 
   return (
     <Box className="tweet-card">
@@ -28,13 +37,13 @@ export default function TweetCard({
         username={tweet.owner.username}
         date={tweet.createdAt}
         isAuthor={isAuthor}
-        onDelete={() => onDelete?.(tweet.id)}
-        onEdit={(newContent) => onEdit?.(tweet.id, newContent)}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
       />
       <TweetCardContent content={tweet.content} />
       <TweetCardActions
         likes={tweet.likeCount || 0}
-        retweets={0}   // à adapter si tu ajoutes les retweets
+        retweets={0}   
         replies={tweet.commentCount || 0}
       />
     </Box>

@@ -14,15 +14,15 @@ import "./Profile.scss";
 export default function Profile() {
   const dispatch = useAppDispatch();
   const user = useSelector((state: RootState) => state.user.profile);
+  const { tweets} = useSelector((state: RootState) => state.tweets);
   const token = localStorage.getItem("token") || "";
-  const { loading: tweetsLoading } = useSelector((state: RootState) => state.tweets);
 
-  // 🔹 Charger les tweets du user au montage
+  // Charger les tweets dès que le user est disponible
   useEffect(() => {
-    if (user && token) {
+    if (user?.id && token) {
       dispatch(fetchUserTweetsThunk({ userId: user.id, token }));
     }
-  }, [user, token, dispatch]);
+  }, [user?.id, token, dispatch]); // attention : user?.id ici
 
   const handleSave = async (updatedUser: { name?: string; bio?: string }) => {
     try {
@@ -34,9 +34,7 @@ export default function Profile() {
   };
 
   if (!user) return <p>Vous devez être connecté pour voir le profil.</p>;
-  const userTweets = useSelector((state: RootState) =>
-    state.tweets.tweets.filter(tweet => tweet.owner.id === user.id)
-  );
+
   return (
     <Box className="profile">
       <ProfileHeader
@@ -48,11 +46,11 @@ export default function Profile() {
         onSave={handleSave}
       />
       <ProfileStats
-        tweets={userTweets.length || 0}
+        tweets={tweets.filter(tweet => tweet.owner.id === user.id).length}
         following={user.following || 0}
         followers={user.followers || 0}
       />
-      <ProfileFeed userId={user.id} currentUser={user.username} loading={tweetsLoading} />
+      <ProfileFeed userId={user.id} currentUser={user.username} />
     </Box>
   );
 }
