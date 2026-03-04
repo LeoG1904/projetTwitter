@@ -3,7 +3,6 @@ import type { CreateTweetPayload, Tweet } from "./types";
 
 export const fetchTweets = async (token: string): Promise<Tweet[]> => {
   const res = await getAllTweets(token);
-  console.log("💡 fetchTweets raw response:", res);
   return res;
 };
 

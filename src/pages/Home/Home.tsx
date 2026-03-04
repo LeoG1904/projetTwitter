@@ -7,8 +7,8 @@ import type { RootState } from "../../app/store";
 import { loadUser } from "../../domains/users/slice";
 import { useAppDispatch } from "../../hooks/hooks";
 import { createTweetThunk, fetchTweetsThunk } from "../../domains/tweets/slice";
-import TweetFilter from "../../domains/tweets/components/TweetFilter/TweetFilter";
 import TweetOrder from "../../domains/tweets/components/TweetOrder/TweetOrder";
+import TweetFilter from "../../domains/tweets/components/TweetFilter/TweetFilter";
 
 function Home() {
   const dispatch = useAppDispatch();
@@ -28,50 +28,25 @@ function Home() {
 
   // 🔹 Charger le user si non présent
   useEffect(() => {
-    if (!user) {
-      dispatch(loadUser());
-    }
+    if (!user) dispatch(loadUser());
   }, [user, dispatch]);
 
   // 🔹 Charger les tweets dès que le user et le token sont prêts
   useEffect(() => {
-    if (user && token) {
-      dispatch(fetchTweetsThunk(token));
-    }
+    if (user && token) dispatch(fetchTweetsThunk(token));
   }, [user, token, dispatch]);
 
   // 🔹 Gestion de l’envoi d’un nouveau tweet
   const handleTweet = (content: string) => {
-    if (!token) return; // sécurité
+    if (!token) return;
     dispatch(createTweetThunk({ payload: { content }, token }));
   };
 
-  // 🔹 Afficher loader si user ou tweets non chargés
   if (userLoading || tweetsLoading || !user) return <p>Loading...</p>;
 
-  // 🔹 Transformation pour rendre compatible avec TweetCard
-  const displayedTweets = Array.isArray(tweets)
-    ? tweets.map(tweet => ({
-        id: tweet.id,
-        content: tweet.content,
-        createdAt: tweet.createdAt,
-        ownerName: `user${tweet.ownerId}`,       // temporaire
-        ownerAvatar: "https://i.pravatar.cc/150?img=32",
-        likes: tweet.likeCount,
-        retweets: 0,
-        replies: tweet.commentCount,
-      }))
-    : [];
+  const setFilter = (filter: string) => console.log("Filtre sélectionné :", filter);
+  const setOrder = (order: string) => console.log("Ordre sélectionné :", order);
 
-  
-  
-  const setFilter = (filter: string) => {
-    console.log("Filtre sélectionné :", filter);
-  }
-  const setOrder = (order: string) => {
-    console.log("Ordre sélectionné :", order);
-  }
-  
   return (
     <div className="home">
       <TweetForm avatar={user.avatar || ""} onTweet={handleTweet} />
@@ -79,22 +54,15 @@ function Home() {
         <TweetFilter onChange={setFilter} />
         <TweetOrder onChange={setOrder} />
       </div>
-      {/* 🔹 Affichage simple des tweets */}
-      {displayedTweets.map(tweet => (
+
+      {/* 🔹 Affichage des tweets avec le TweetCard refactoré */}
+      {tweets.map(tweet => (
         <TweetCard
           key={tweet.id}
-          id={tweet.id}
-          avatar={tweet.ownerAvatar}
-          name={tweet.ownerName}
-          username={`@${tweet.ownerName}`}
-          date={`${Math.round(
-            (new Date().getTime() - new Date(tweet.createdAt).getTime()) / 60000
-          )}m`}
-          content={tweet.content}
-          likes={tweet.likes || 0}
-          retweets={tweet.retweets || 0}
-          replies={tweet.replies || 0}
-          currentUser={`@${user.username}`}
+          tweet={tweet}                // ← on passe directement le tweet
+          currentUser={user.username}  // ← compare avec owner.username dans TweetCard
+          onDelete={() => console.log("Supprimer tweet", tweet.id)}
+          onEdit={(id, newContent) => console.log("Edit tweet", id, newContent)}
         />
       ))}
     </div>

@@ -3,51 +3,40 @@ import TweetCardHeader from "./TweetHeader/TweetCardHeader";
 import TweetCardContent from "./TweetCardContent/TweetCardContent";
 import TweetCardActions from "./TweetCardActions/TweetCardActions";
 import "./TweetCard.scss";
+import type { Tweet } from "../../types";
 
 interface TweetCardProps {
-  id: number;
-  avatar: string;
-  name: string;
-  username: string;
-  date: string;
-  content: string;
-  likes: number;
-  retweets: number;
-  replies: number;
-  currentUser: string; // username connecté
+  tweet: Tweet;               // ← on passe le tweet entier
+  currentUser: string;        // username connecté
   onDelete?: (id: number) => void;
   onEdit?: (id: number, newContent: string) => void;
 }
 
 export default function TweetCard({
-  id,
-  avatar,
-  name,
-  username,
-  date,
-  content,
-  likes,
-  retweets,
-  replies,
+  tweet,
   currentUser,
   onDelete,
   onEdit,
 }: TweetCardProps) {
-  const isAuthor = currentUser === username;
+  const isAuthor = currentUser === tweet.owner.username;
 
   return (
     <Box className="tweet-card">
       <TweetCardHeader
-        avatar={avatar}
-        name={name}
-        username={username}
-        date={date}
+        avatar={tweet.owner.avatar || ""}
+        name={tweet.owner.name}
+        username={tweet.owner.username}
+        date={tweet.createdAt}
         isAuthor={isAuthor}
-        onDelete={() => onDelete?.(id)}
-        onEdit={(newContent) => onEdit?.(id, newContent)}
+        onDelete={() => onDelete?.(tweet.id)}
+        onEdit={(newContent) => onEdit?.(tweet.id, newContent)}
       />
-      <TweetCardContent content={content} />
-      <TweetCardActions likes={likes} retweets={retweets} replies={replies} />
+      <TweetCardContent content={tweet.content} />
+      <TweetCardActions
+        likes={tweet.likeCount || 0}
+        retweets={0}   // à adapter si tu ajoutes les retweets
+        replies={tweet.commentCount || 0}
+      />
     </Box>
   );
 }
