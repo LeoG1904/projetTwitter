@@ -16,7 +16,6 @@ interface TweetCardHeaderProps {
 export default function TweetCardHeader({
   avatar,
   name,
-  username,
   date,
   isAuthor,
   onDelete,

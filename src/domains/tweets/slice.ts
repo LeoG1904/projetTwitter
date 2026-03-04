@@ -38,6 +38,17 @@ export const createTweetThunk = createAsyncThunk(
   }
 );
 
+export const fetchUserTweetsThunk = createAsyncThunk(
+  "tweets/fetchByUser",
+  async ({ userId, token }: { userId: number; token: string }, { rejectWithValue }) => {
+    try {
+      return await tweetService.fetchUserTweets(userId, token);
+    } catch (err: any) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 const tweetsSlice = createSlice({
   name: "tweets",
   initialState,
@@ -65,8 +76,19 @@ const tweetsSlice = createSlice({
       .addCase(createTweetThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(fetchUserTweetsThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchUserTweetsThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tweets = action.payload;
+      })
+      .addCase(fetchUserTweetsThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
-  },
+      },
 });
 
 export default tweetsSlice.reducer;

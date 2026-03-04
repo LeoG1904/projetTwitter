@@ -12,3 +12,7 @@ export const postTweet = async (
 ): Promise<Tweet> => {
   return await createTweet(payload, token);
 };
+
+export const fetchUserTweets = async (userId: number, token: string): Promise<Tweet[]> => {
+  return await getUserTweets(userId, token);
+};

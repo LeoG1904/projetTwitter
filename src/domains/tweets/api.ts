@@ -19,3 +19,9 @@ export const createTweet = async (
   });
   return res.data;
 };
+export const getUserTweets = async (userId: number, token: string): Promise<Tweet[]> => {
+  const res = await axios.get<Tweet[]>(`${BASE_URL}/user/${userId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
