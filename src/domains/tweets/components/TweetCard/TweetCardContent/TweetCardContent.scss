@@ -2,4 +2,7 @@
   font-size: 0.95rem;
   line-height: 1.4;
   color: #0f1419;
+  white-space: pre-wrap;      // conserve les sauts de ligne et espace multiple
+  word-wrap: break-word;      // ancienne compatibilité
+  overflow-wrap: break-word;  // standard moderne
 }
