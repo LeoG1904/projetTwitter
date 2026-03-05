@@ -111,9 +111,12 @@ export const unlikeTweetThunk = createAsyncThunk(
 // 🔹 Fetch tweets avec filtre
 export const fetchFilteredTweetsThunk = createAsyncThunk(
   "tweets/fetchFiltered",
-  async ({ filter, token }: { filter: "all" | "following"; token: string }, { rejectWithValue }) => {
+  async (
+    { filter, order, token }: { filter: "all" | "following"; order: "date" | "likes" | "retweets" | "replies"; token: string },
+    { rejectWithValue }
+  ) => {
     try {
-      return await tweetService.fetchFilteredTweets(filter, token);
+      return await tweetService.fetchFilteredTweets(filter, order, token);
     } catch (err: any) {
       return rejectWithValue(err.message);
     }

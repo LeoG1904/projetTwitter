@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "./Home.scss";
 import TweetForm from "../../domains/tweets/components/TweetForm/TweetForm";
@@ -29,17 +29,21 @@ function Home() {
   // 🔹 Auth token
   const { token } = useSelector((state: RootState) => state.auth);
 
+  // 🔹 Filtre et ordre locaux pour combiner
+  const [currentFilter, setCurrentFilter] = useState<"all" | "following">("all");
+  const [currentOrder, setCurrentOrder] = useState<"date" | "likes" | "retweets" | "replies">("date");
+
   // 🔹 Charger le user si non présent
   useEffect(() => {
     if (!user) dispatch(loadUser());
   }, [user, dispatch]);
 
-  // 🔹 Charger les tweets dès que le user et le token sont prêts (par défaut all)
+  // 🔹 Charger les tweets dès que le user, le token, le filtre ou l’ordre changent
   useEffect(() => {
     if (user && token) {
-      dispatch(fetchFilteredTweetsThunk({ filter: "all", token }));
+      dispatch(fetchFilteredTweetsThunk({ filter: currentFilter, order: currentOrder, token }));
     }
-  }, [user, token, dispatch]);
+  }, [user, token, currentFilter, currentOrder, dispatch]);
 
   // 🔹 Gestion de l’envoi d’un nouveau tweet
   const handleTweet = (content: string) => {
@@ -49,15 +53,12 @@ function Home() {
 
   // 🔹 Changer le filtre (all / following)
   const handleFilterChange = (filter: "all" | "following") => {
-    if (token) {
-      dispatch(fetchFilteredTweetsThunk({ filter, token }));
-    }
+    setCurrentFilter(filter);
   };
 
-  // 🔹 Gérer l’ordre (si tu veux l’implémenter)
-  const handleOrderChange = (order: string) => {
-    console.log("Ordre sélectionné :", order);
-    // Tu peux ajouter un tri local si besoin
+  // 🔹 Gérer l’ordre
+  const handleOrderChange = (order: "date" | "likes" | "retweets" | "replies") => {
+    setCurrentOrder(order);
   };
 
   if (userLoading || tweetsLoading || !user) return <p>Loading...</p>;
@@ -78,7 +79,7 @@ function Home() {
         }}
       >
         <TweetFilter onChange={handleFilterChange} />
-        <TweetOrder onChange={handleOrderChange} />
+        <TweetOrder order={currentOrder} onChange={handleOrderChange} />
       </div>
 
       {/* Affichage des tweets */}
