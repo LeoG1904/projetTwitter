@@ -3,13 +3,13 @@ import { commentService } from "./service";
 import type { Comment, CreateCommentPayload } from "./types";
 
 interface CommentState {
-  comments: Comment[];
+  commentsByTweet: Record<number, Comment[]>; // key = tweetId
   loading: boolean;
   error: string | null;
 }
 
 const initialState: CommentState = {
-  comments: [],
+  commentsByTweet: {},
   loading: false,
   error: null,
 };
@@ -18,24 +18,27 @@ const initialState: CommentState = {
 export const fetchComments = createAsyncThunk(
   "comments/fetchComments",
   async ({ tweetId, token }: { tweetId: number; token: string }) => {
-    return await commentService.fetchCommentsByTweet(tweetId, token);
+    const comments = await commentService.fetchCommentsByTweet(tweetId, token);
+    return { tweetId, comments };
   }
 );
 
 export const addComment = createAsyncThunk(
   "comments/addComment",
   async ({ payload, token }: { payload: CreateCommentPayload; token: string }) => {
-    return await commentService.createComment(payload, token);
+    const comment = await commentService.createComment(payload, token);
+    return comment;
   }
 );
 
 export const removeComment = createAsyncThunk(
   "comments/removeComment",
-  async ({ id, token }: { id: number; token: string }) => {
+  async ({ id, tweetId, token }: { id: number; tweetId: number; token: string }) => {
     await commentService.deleteComment(id, token);
-    return id;
+    return { id, tweetId };
   }
 );
+
 export const commentSlice = createSlice({
   name: "comments",
   initialState,
@@ -46,10 +49,13 @@ export const commentSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(fetchComments.fulfilled, (state, action: PayloadAction<Comment[]>) => {
-      state.loading = false;
-      state.comments = action.payload;
-    });
+    builder.addCase(
+      fetchComments.fulfilled,
+      (state, action: PayloadAction<{ tweetId: number; comments: Comment[] }>) => {
+        state.loading = false;
+        state.commentsByTweet[action.payload.tweetId] = action.payload.comments;
+      }
+    );
     builder.addCase(fetchComments.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || "Failed to fetch comments";
@@ -62,7 +68,11 @@ export const commentSlice = createSlice({
     });
     builder.addCase(addComment.fulfilled, (state, action: PayloadAction<Comment>) => {
       state.loading = false;
-      state.comments.push(action.payload);
+      const tweetId = action.payload.tweetId;
+      if (!state.commentsByTweet[tweetId]) {
+        state.commentsByTweet[tweetId] = [];
+      }
+      state.commentsByTweet[tweetId].push(action.payload);
     });
     builder.addCase(addComment.rejected, (state, action) => {
       state.loading = false;
@@ -74,10 +84,18 @@ export const commentSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(removeComment.fulfilled, (state, action: PayloadAction<number>) => {
-      state.loading = false;
-      state.comments = state.comments.filter((c) => c.id !== action.payload);
-    });
+    builder.addCase(
+      removeComment.fulfilled,
+      (state, action: PayloadAction<{ id: number; tweetId: number }>) => {
+        state.loading = false;
+        const { id, tweetId } = action.payload;
+        if (state.commentsByTweet[tweetId]) {
+          state.commentsByTweet[tweetId] = state.commentsByTweet[tweetId].filter(
+            (c) => c.id !== id
+          );
+        }
+      }
+    );
     builder.addCase(removeComment.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || "Failed to remove comment";

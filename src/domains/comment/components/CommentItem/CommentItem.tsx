@@ -8,15 +8,16 @@ import "./CommentItem.scss";
 
 interface CommentItemProps {
   comment: Comment;
+  tweetId: number; // <- ajouté
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment }) => {
+const CommentItem: React.FC<CommentItemProps> = ({ comment, tweetId }) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector((state: RootState) => state.auth.token);
 
   const handleDelete = () => {
     if (!token) return;
-    dispatch(removeComment({ id: comment.id, token }));
+    dispatch(removeComment({ id: comment.id, tweetId, token })); // <- tweetId inclus
   };
 
   return (

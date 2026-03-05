@@ -13,25 +13,24 @@ interface CommentListProps {
 
 const CommentList: React.FC<CommentListProps> = ({ tweetId }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { comments, loading, error } = useSelector((state: RootState) => state.comments);
-  const token = useSelector((state: RootState) => state.auth.token); // récupérer le token
+  const { commentsByTweet, loading, error } = useSelector((state: RootState) => state.comments);
+  const token = useSelector((state: RootState) => state.auth.token);
 
   useEffect(() => {
     if (token) {
-      dispatch(fetchComments({ tweetId, token })); // passer le token
+      dispatch(fetchComments({ tweetId, token }));
     }
   }, [dispatch, tweetId, token]);
 
-  // fallback pour éviter crash si comments n’est pas un tableau
-  const safeComments = Array.isArray(comments) ? comments : [];
+  const comments = commentsByTweet[tweetId] || [];
 
   return (
     <div className="comment-list">
       <CommentForm tweetId={tweetId} />
       {loading && <p className="comment-list__loading">Loading comments...</p>}
       {error && <p className="comment-list__error">{error}</p>}
-      {safeComments.map((comment) => (
-        <CommentItem key={comment.id} comment={comment} />
+      {comments.map((comment) => (
+        <CommentItem key={comment.id} comment={comment} tweetId={tweetId} />
       ))}
     </div>
   );

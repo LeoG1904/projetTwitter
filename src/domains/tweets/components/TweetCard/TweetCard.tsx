@@ -8,13 +8,12 @@ import TweetCardActions from "./TweetCardActions/TweetCardActions";
 
 import { useAppDispatch } from "../../../../hooks/hooks";
 import { deleteTweetThunk, updateTweetThunk } from "../../slice";
+import CommentList from "../../../comment/components/CommentList/CommentList";
 
 import type { Tweet } from "../../types";
 import type { RootState } from "../../../../app/store";
 
-
 import "./TweetCard.scss";
-import CommentList from "../../../comment/components/CommentList/CommentList";
 
 interface TweetCardProps {
   tweet: Tweet;
@@ -24,6 +23,7 @@ interface TweetCardProps {
 export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
   const dispatch = useAppDispatch();
   const token = useSelector((state: RootState) => state.auth.token);
+  const commentsByTweet = useSelector((state: RootState) => state.comments.commentsByTweet);
 
   const [isEditing, setIsEditing] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -41,9 +41,9 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
     setIsEditing(false);
   };
 
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
+  const handleCancel = () => setIsEditing(false);
+
+  const commentCount = commentsByTweet[tweet.id]?.length || 0;
 
   return (
     <Box className="tweet-card">
@@ -51,7 +51,7 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
         avatar={tweet.owner.avatar || ""}
         name={tweet.owner.name}
         username={tweet.owner.username}
-        userId={tweet.owner.id}           
+        userId={tweet.owner.id}
         date={tweet.createdAt}
         isAuthor={isAuthor}
         onDelete={handleDelete}
@@ -68,7 +68,7 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
       <TweetCardActions
         likes={tweet.likeCount || 0}
         retweets={0}
-        replies={tweet.commentCount || 0}
+        replies={commentCount} // <-- utiliser le compteur dynamique
         onReplyClick={() => setShowComments(!showComments)}
       />
 
@@ -83,7 +83,9 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
         onClick={() => setShowComments(!showComments)}
         size="small"
       >
-        {showComments ? "Hide Comments" : `Show Comments (${tweet.commentCount || 0})`}
+        {showComments
+          ? "Hide Comments"
+          : `Show Comments (${commentCount})`}
       </Button>
     </Box>
   );
