@@ -11,6 +11,13 @@ export const getAllTweets = async (token: string): Promise<Tweet[]> => {
   return res.data;
 };
 
+export const getFilteredTweets = async (filter: "all" | "following", token: string): Promise<Tweet[]> => {
+  const res = await axios.get<Tweet[]>(`${BASE_URL}/feed?filter=${filter}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
 export const createTweet = async (payload: CreateTweetPayload, token: string): Promise<Tweet> => {
   const res = await axios.post<Tweet>(BASE_URL, payload, {
     headers: { Authorization: `Bearer ${token}` },

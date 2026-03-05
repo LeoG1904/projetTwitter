@@ -15,7 +15,7 @@ export default function TweetFilter({ onChange }: TweetFilterProps) {
   };
 
   return (
-    <Box className="tweet-filter">
+    <Box className="tweet-filter" sx={{ display: "flex", gap: 1 }}>
       <Button
         variant={active === "all" ? "contained" : "outlined"}
         onClick={() => handleClick("all")}

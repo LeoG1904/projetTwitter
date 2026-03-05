@@ -108,6 +108,18 @@ export const unlikeTweetThunk = createAsyncThunk(
   }
 );
 
+// 🔹 Fetch tweets avec filtre
+export const fetchFilteredTweetsThunk = createAsyncThunk(
+  "tweets/fetchFiltered",
+  async ({ filter, token }: { filter: "all" | "following"; token: string }, { rejectWithValue }) => {
+    try {
+      return await tweetService.fetchFilteredTweets(filter, token);
+    } catch (err: any) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 // ========================
 // SLICE
 // ========================
@@ -122,12 +134,15 @@ const tweetsSlice = createSlice({
       .addCase(fetchTweetsThunk.pending, (state) => { state.loading = true; })
       .addCase(fetchTweetsThunk.fulfilled, (state, action) => { state.loading = false; state.tweets = action.payload; })
       .addCase(fetchTweetsThunk.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
+      
+      .addCase(fetchFilteredTweetsThunk.pending, (state) => { state.loading = true; })
+      .addCase(fetchFilteredTweetsThunk.fulfilled, (state, action) => { state.loading = false; state.tweets = action.payload; })
+      .addCase(fetchFilteredTweetsThunk.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
 
       // CREATE
       .addCase(createTweetThunk.pending, (state) => { state.loading = true; })
       .addCase(createTweetThunk.fulfilled, (state, action) => { state.loading = false; state.tweets.unshift(action.payload); })
       .addCase(createTweetThunk.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
-
       // FETCH BY USER
       .addCase(fetchUserTweetsThunk.pending, (state) => { state.loading = true; })
       .addCase(fetchUserTweetsThunk.fulfilled, (state, action) => { state.loading = false; state.tweets = action.payload; })

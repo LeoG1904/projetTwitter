@@ -6,6 +6,10 @@ export const fetchTweets = async (token: string): Promise<Tweet[]> => {
   return await api.getAllTweets(token);
 };
 
+export const fetchFilteredTweets = async (filter: "all" | "following", token: string): Promise<Tweet[]> => {
+  return await api.getFilteredTweets(filter, token);
+};
+
 export const postTweet = async (payload: CreateTweetPayload, token: string): Promise<Tweet> => {
   return await api.createTweet(payload, token);
 };
