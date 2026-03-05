@@ -1,22 +1,30 @@
+import { useState } from "react";
 import { Box } from "@mui/material";
+import { useSelector } from "react-redux";
+
 import TweetCardHeader from "./TweetHeader/TweetCardHeader";
 import TweetCardContent from "./TweetCardContent/TweetCardContent";
 import TweetCardActions from "./TweetCardActions/TweetCardActions";
-import "./TweetCard.scss";
-import { useSelector } from "react-redux";
-import type { Tweet } from "../../types";
+
 import { useAppDispatch } from "../../../../hooks/hooks";
 import { deleteTweetThunk, updateTweetThunk } from "../../slice";
+
+import type { Tweet } from "../../types";
 import type { RootState } from "../../../../app/store";
 
+import "./TweetCard.scss";
+
 interface TweetCardProps {
-  tweet: Tweet;               
-  currentUser: string;        
+  tweet: Tweet;
+  currentUser: string;
 }
 
 export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
   const dispatch = useAppDispatch();
   const token = useSelector((state: RootState) => state.auth.token);
+
+  const [isEditing, setIsEditing] = useState(false);
+
   const isAuthor = currentUser === tweet.owner.username;
 
   const handleDelete = () => {
@@ -24,9 +32,15 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
     dispatch(deleteTweetThunk({ tweetId: tweet.id, token }));
   };
 
-  const handleEdit = (newContent: string) => {
+  const handleSave = (newContent: string) => {
     if (!token) return;
+
     dispatch(updateTweetThunk({ tweetId: tweet.id, newContent, token }));
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
   };
 
   return (
@@ -38,12 +52,19 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
         date={tweet.createdAt}
         isAuthor={isAuthor}
         onDelete={handleDelete}
-        onEdit={handleEdit}
+        onEdit={() => setIsEditing(true)}
       />
-      <TweetCardContent content={tweet.content} />
+
+      <TweetCardContent
+        content={tweet.content}
+        isEditing={isEditing}
+        onSave={handleSave}
+        onCancel={handleCancel}
+      />
+
       <TweetCardActions
         likes={tweet.likeCount || 0}
-        retweets={0}   
+        retweets={0}
         replies={tweet.commentCount || 0}
       />
     </Box>
