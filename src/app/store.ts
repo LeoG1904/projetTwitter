@@ -4,6 +4,7 @@ import userReducer from "../domains/users/slice";
 import tweetsReducer from "../domains/tweets/slice";
 import followReducer from "../domains/follow/slice";
 import commentReducer from "../domains/comment/slice";
+import likeReducer from "../domains/likes/slice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     tweets: tweetsReducer,
     follow: followReducer, 
     comments: commentReducer,
+    likes: likeReducer,
   },
 });
 

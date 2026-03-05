@@ -2,23 +2,27 @@ import { Box, Typography, IconButton } from "@mui/material";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
+
 import "./TweetCardActions.scss";
 
 interface TweetCardActionsProps {
   likes: number;
   retweets: number;
   replies: number;
-  onReplyClick?: () => void; // callback pour afficher les commentaires
-  onLikeClick?: () => void;  // callback futur pour liker
-  onRetweetClick?: () => void; // callback futur pour retweet
-  onShareClick?: () => void; // callback futur pour partager
+  liked?: boolean; // true si l'utilisateur a liké
+  onReplyClick?: () => void;
+  onLikeClick?: () => void;
+  onRetweetClick?: () => void;
+  onShareClick?: () => void;
 }
 
 export default function TweetCardActions({
   likes,
   retweets,
   replies,
+  liked = false,
   onReplyClick,
   onLikeClick,
   onRetweetClick,
@@ -42,7 +46,11 @@ export default function TweetCardActions({
 
       <Box className="tweet-card__action">
         <IconButton size="small" onClick={onLikeClick}>
-          <FavoriteBorderIcon fontSize="small" />
+          {liked ? (
+            <FavoriteIcon fontSize="small" color="error" />
+          ) : (
+            <FavoriteBorderIcon fontSize="small" />
+          )}
         </IconButton>
         <Typography className="tweet-card__action-count">{likes}</Typography>
       </Box>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Collapse, Button } from "@mui/material";
 import { useSelector } from "react-redux";
 
@@ -9,6 +9,7 @@ import TweetCardActions from "./TweetCardActions/TweetCardActions";
 import { useAppDispatch } from "../../../../hooks/hooks";
 import { deleteTweetThunk, updateTweetThunk } from "../../slice";
 import CommentList from "../../../comment/components/CommentList/CommentList";
+import { like, unlike, checkHasLiked, getLikesCountThunk } from "../../../likes/slice";
 
 import type { Tweet } from "../../types";
 import type { RootState } from "../../../../app/store";
@@ -25,10 +26,27 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
   const token = useSelector((state: RootState) => state.auth.token);
   const commentsByTweet = useSelector((state: RootState) => state.comments.commentsByTweet);
 
+  // Likes state from Redux
+  const likesCount = useSelector(
+    (state: RootState) => state.likes.likesCount[tweet.id] ?? tweet.likeCount ?? 0
+  );
+  const hasLiked = useSelector(
+    (state: RootState) => state.likes.hasLiked[tweet.id] ?? tweet.hasLiked ?? false
+  );
+
   const [isEditing, setIsEditing] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
   const isAuthor = currentUser === tweet.owner.username;
+  const commentCount = commentsByTweet[tweet.id]?.length ?? tweet.commentCount ?? 0;
+
+  // 🔹 Initial fetch of likes and whether the user has liked this tweet
+  useEffect(() => {
+    if (token) {
+      dispatch(getLikesCountThunk(tweet.id));
+      dispatch(checkHasLiked({ tweetId: tweet.id, token }));
+    }
+  }, [dispatch, tweet.id, token]);
 
   const handleDelete = () => {
     if (!token) return;
@@ -43,12 +61,23 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
 
   const handleCancel = () => setIsEditing(false);
 
-  const commentCount = commentsByTweet[tweet.id]?.length || 0;
+  const handleLikeClick = () => {
+    if (!token) return;
+    if (hasLiked) {
+      dispatch(unlike({ tweetId: tweet.id, token }));
+    } else {
+      dispatch(like({ tweetId: tweet.id, token }));
+    }
+  };
+
+  const handleReplyClick = () => setShowComments(!showComments);
+  const handleRetweetClick = () => console.log("Retweet", tweet.id);
+  const handleShareClick = () => console.log("Share", tweet.id);
 
   return (
     <Box className="tweet-card">
       <TweetCardHeader
-        avatar={tweet.owner.avatar || ""}
+        avatar={tweet.owner.avatar ?? ""}
         name={tweet.owner.name}
         username={tweet.owner.username}
         userId={tweet.owner.id}
@@ -66,10 +95,14 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
       />
 
       <TweetCardActions
-        likes={tweet.likeCount || 0}
+        likes={likesCount}
+        liked={hasLiked}
         retweets={0}
-        replies={commentCount} // <-- utiliser le compteur dynamique
-        onReplyClick={() => setShowComments(!showComments)}
+        replies={commentCount}
+        onReplyClick={handleReplyClick}
+        onLikeClick={handleLikeClick}
+        onRetweetClick={handleRetweetClick}
+        onShareClick={handleShareClick}
       />
 
       <Collapse in={showComments}>
@@ -83,9 +116,7 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
         onClick={() => setShowComments(!showComments)}
         size="small"
       >
-        {showComments
-          ? "Hide Comments"
-          : `Show Comments (${commentCount})`}
+        {showComments ? "Hide Comments" : `Show Comments (${commentCount})`}
       </Button>
     </Box>
   );

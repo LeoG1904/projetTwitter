@@ -1,15 +1,7 @@
-export interface Tweet {
-  id: number;
-  content: string;
-  createdAt: string;
-  ownerId: number;        
-  parentId?: number | null;
-  likeCount?: number;
-  commentCount?: number;
-}
+
 
 export interface TweetsState {
-  tweets: Tweet[];       // ← tableau par défaut
+  tweets: Tweet[];
   loading: boolean;
   error: string | null;
 }
@@ -29,8 +21,9 @@ export interface Tweet {
   id: number;
   content: string;
   createdAt: string;
-  owner: Owner;            // ← objet complet maintenant
+  owner: Owner;
   parentId?: number | null;
   likeCount?: number;
   commentCount?: number;
+  hasLiked?: boolean; 
 }

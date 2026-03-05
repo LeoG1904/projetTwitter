@@ -1,27 +1,40 @@
 import type { CreateTweetPayload, Tweet } from "./types";
-import { getAllTweets, createTweet, getUserTweets, deleteTweet as apiDeleteTweet, updateTweet as apiUpdateTweet } from "./api";
+import * as api from "./api";
 
-// 🔹 Récupérer tous les tweets
+// TWEETS
 export const fetchTweets = async (token: string): Promise<Tweet[]> => {
-  return await getAllTweets(token);
+  return await api.getAllTweets(token);
 };
 
-// 🔹 Créer un nouveau tweet
 export const postTweet = async (payload: CreateTweetPayload, token: string): Promise<Tweet> => {
-  return await createTweet(payload, token);
+  return await api.createTweet(payload, token);
 };
 
-// 🔹 Récupérer les tweets d'un utilisateur
 export const fetchUserTweets = async (userId: number, token: string): Promise<Tweet[]> => {
-  return await getUserTweets(userId, token);
+  return await api.getUserTweets(userId, token);
 };
 
-// 🔹 Supprimer un tweet
 export const deleteTweet = async (tweetId: number, token: string): Promise<void> => {
-  return await apiDeleteTweet(tweetId, token);
+  return await api.deleteTweet(tweetId, token);
 };
 
-// 🔹 Mettre à jour un tweet
 export const updateTweet = async (tweetId: number, newContent: string, token: string): Promise<Tweet> => {
-  return await apiUpdateTweet(tweetId, newContent, token);
+  return await api.updateTweet(tweetId, newContent, token);
+};
+
+// LIKES
+export const likeTweet = async (tweetId: number, token: string): Promise<void> => {
+  return await api.likeTweetApi(tweetId, token);
+};
+
+export const unlikeTweet = async (tweetId: number, token: string): Promise<void> => {
+  return await api.unlikeTweetApi(tweetId, token);
+};
+
+export const fetchLikesCount = async (tweetId: number): Promise<number> => {
+  return await api.fetchLikesCountApi(tweetId);
+};
+
+export const fetchHasLiked = async (tweetId: number, token: string): Promise<boolean> => {
+  return await api.fetchHasLikedApi(tweetId, token);
 };

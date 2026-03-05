@@ -10,9 +10,14 @@ interface TweetsState {
 
 const initialState: TweetsState = {
   tweets: [],
-  loading: false
+  loading: false,
 };
 
+// ========================
+// THUNKS
+// ========================
+
+// 🔹 Fetch all tweets
 export const fetchTweetsThunk = createAsyncThunk(
   "tweets/fetchAll",
   async (token: string, { rejectWithValue }) => {
@@ -24,6 +29,7 @@ export const fetchTweetsThunk = createAsyncThunk(
   }
 );
 
+// 🔹 Create new tweet
 export const createTweetThunk = createAsyncThunk(
   "tweets/create",
   async (
@@ -38,6 +44,7 @@ export const createTweetThunk = createAsyncThunk(
   }
 );
 
+// 🔹 Fetch tweets by user
 export const fetchUserTweetsThunk = createAsyncThunk(
   "tweets/fetchByUser",
   async ({ userId, token }: { userId: number; token: string }, { rejectWithValue }) => {
@@ -49,7 +56,7 @@ export const fetchUserTweetsThunk = createAsyncThunk(
   }
 );
 
-// DELETE
+// 🔹 Delete a tweet
 export const deleteTweetThunk = createAsyncThunk(
   "tweets/delete",
   async ({ tweetId, token }: { tweetId: number; token: string }, { rejectWithValue }) => {
@@ -62,7 +69,7 @@ export const deleteTweetThunk = createAsyncThunk(
   }
 );
 
-// UPDATE
+// 🔹 Update a tweet
 export const updateTweetThunk = createAsyncThunk(
   "tweets/update",
   async (
@@ -77,53 +84,84 @@ export const updateTweetThunk = createAsyncThunk(
   }
 );
 
+// 🔹 Like a tweet
+export const likeTweetThunk = createAsyncThunk(
+  "tweets/like",
+  async ({ tweetId, token }: { tweetId: number; token: string }, { rejectWithValue }) => {
+    try {
+      return await tweetService.likeTweet(tweetId, token);
+    } catch (err: any) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+// 🔹 Unlike a tweet
+export const unlikeTweetThunk = createAsyncThunk(
+  "tweets/unlike",
+  async ({ tweetId, token }: { tweetId: number; token: string }, { rejectWithValue }) => {
+    try {
+      return await tweetService.unlikeTweet(tweetId, token);
+    } catch (err: any) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+// ========================
+// SLICE
+// ========================
+
 const tweetsSlice = createSlice({
   name: "tweets",
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchTweetsThunk.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchTweetsThunk.fulfilled, (state, action) => {
-        state.loading = false;
-        state.tweets = action.payload;
-      })
-      .addCase(fetchTweetsThunk.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(createTweetThunk.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(createTweetThunk.fulfilled, (state, action) => {
-        state.loading = false;
-        state.tweets.unshift(action.payload);
-      })
-      .addCase(createTweetThunk.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(fetchUserTweetsThunk.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchUserTweetsThunk.fulfilled, (state, action) => {
-        state.loading = false;
-        state.tweets = action.payload;
-      })
-      .addCase(fetchUserTweetsThunk.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
+      // FETCH ALL
+      .addCase(fetchTweetsThunk.pending, (state) => { state.loading = true; })
+      .addCase(fetchTweetsThunk.fulfilled, (state, action) => { state.loading = false; state.tweets = action.payload; })
+      .addCase(fetchTweetsThunk.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
+
+      // CREATE
+      .addCase(createTweetThunk.pending, (state) => { state.loading = true; })
+      .addCase(createTweetThunk.fulfilled, (state, action) => { state.loading = false; state.tweets.unshift(action.payload); })
+      .addCase(createTweetThunk.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
+
+      // FETCH BY USER
+      .addCase(fetchUserTweetsThunk.pending, (state) => { state.loading = true; })
+      .addCase(fetchUserTweetsThunk.fulfilled, (state, action) => { state.loading = false; state.tweets = action.payload; })
+      .addCase(fetchUserTweetsThunk.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
+
+      // DELETE
       .addCase(deleteTweetThunk.fulfilled, (state, action) => {
         state.tweets = state.tweets.filter(t => t.id !== action.payload);
       })
+
+      // UPDATE
       .addCase(updateTweetThunk.fulfilled, (state, action) => {
         const index = state.tweets.findIndex(t => t.id === action.payload.id);
         if (index !== -1) state.tweets[index] = action.payload;
+      })
+
+      // LIKE
+      .addCase(likeTweetThunk.fulfilled, (state, action) => {
+        const tweet = state.tweets.find(t => t.id === action.meta.arg.tweetId);
+        if (tweet) {
+          tweet.hasLiked = true;
+          tweet.likeCount = (tweet.likeCount || 0) + 1;
+        }
+      })
+
+      // UNLIKE
+      .addCase(unlikeTweetThunk.fulfilled, (state, action) => {
+        const tweet = state.tweets.find(t => t.id === action.meta.arg.tweetId);
+        if (tweet) {
+          tweet.hasLiked = false;
+          tweet.likeCount = Math.max((tweet.likeCount || 1) - 1, 0);
+        }
       });
-      },
+  },
 });
 
 export default tweetsSlice.reducer;
