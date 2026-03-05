@@ -77,9 +77,8 @@ export default function Profile() {
         username={`@${user.username}`}
         bio={user.bio || ""}
         avatar={user.avatar || ""}
-        isOwnProfile={isOwnProfile} // 🔹 indique si c'est le profil du user connecté
-        onFollow={() => console.log("Follow / Unfollow")}
-        onSave={handleSave}
+        userId={user.id}         // 🔹 important
+        isOwnProfile={isOwnProfile}
       />
       <ProfileStats
         tweets={userTweets.length || 0}

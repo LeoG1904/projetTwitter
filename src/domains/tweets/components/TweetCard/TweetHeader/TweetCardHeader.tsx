@@ -31,7 +31,6 @@ interface TweetCardHeaderProps {
 export default function TweetCardHeader({
   avatar,
   name,
-  username,
   userId,
   date,
   isAuthor,
