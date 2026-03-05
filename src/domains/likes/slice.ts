@@ -32,8 +32,8 @@ export const unlike = createAsyncThunk(
 
 export const getLikesCountThunk = createAsyncThunk(
   "likes/count",
-  async (tweetId: number) => {
-    const count = await fetchLikesCount(tweetId);
+  async ({ tweetId, token }: { tweetId: number; token: string }) => {
+    const count = await fetchLikesCount(tweetId, token);
     return { tweetId, count };
   }
 );

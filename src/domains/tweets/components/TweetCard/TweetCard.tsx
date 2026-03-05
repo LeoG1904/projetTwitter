@@ -43,7 +43,7 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
   // 🔹 Initial fetch of likes and whether the user has liked this tweet
   useEffect(() => {
     if (token) {
-      dispatch(getLikesCountThunk(tweet.id));
+      dispatch(getLikesCountThunk({ tweetId: tweet.id, token }));
       dispatch(checkHasLiked({ tweetId: tweet.id, token }));
     }
   }, [dispatch, tweet.id, token]);
