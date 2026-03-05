@@ -1,4 +1,4 @@
-.like-notification {
+.notification-item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -19,7 +19,15 @@
   }
 
   &__icon {
-    color: #e0245e; // rouge like
+    font-size: 28px;
+
+    &.like {
+      color: #e0245e; // rouge pour like
+    }
+
+    &.follow {
+      color: #1da1f2; // bleu pour follow
+    }
   }
 
   &__content {
@@ -29,11 +37,6 @@
 
     strong {
       font-weight: 600;
-    }
-
-    em {
-      font-style: italic;
-      color: #555;
     }
   }
 }

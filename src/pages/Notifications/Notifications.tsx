@@ -1,49 +1,50 @@
 import { Box } from "@mui/material";
-import FollowNotification from "../../domains/notifications/components/FollowNotification/FollowNotification";
-import LikeNotification from "../../domains/notifications/components/LikeNotification/LikeNotification";
+import { useEffect } from "react";
 import "./Notifications.scss";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import {
+  fetchNotificationsThunk,
+  markAllNotificationsViewedThunk,
+} from "../../domains/notifications/slice";
+import type { AppNotification } from "../../domains/notifications/types";
+import NotificationItem from "../../domains/notifications/components/NotificationItem/NotificationItem";
 
 export default function Notifications() {
-  const mockNotifications = [
-    {
-      type: "follow",
-      avatar: "https://i.pravatar.cc/150?img=10",
-      name: "Alice",
-      username: "@alice",
-      date: "1h",
-    },
-    {
-      type: "like",
-      avatar: "https://i.pravatar.cc/150?img=12",
-      name: "Bob",
-      username: "@bob",
-      tweetContent: "Ceci est un tweet de test",
-      date: "2h",
-    },
-  ];
+  const dispatch = useAppDispatch();
+  const { notifications, loading } = useAppSelector((state) => state.notifications);
+  const token = useAppSelector((state) => state.auth.token);
+
+  // charger les notifications
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchNotificationsThunk(token));
+    }
+  }, [dispatch, token]);
+
+  // marquer comme vues
+  useEffect(() => {
+    if (token && notifications.length > 0) {
+      dispatch(markAllNotificationsViewedThunk(token));
+    }
+  }, [dispatch, token, notifications.length]);
+
+  if (loading) return <Box className="notifications">Chargement...</Box>;
 
   return (
     <Box className="notifications">
-      {mockNotifications.map((n, i) => 
-        n.type === "follow" ? (
-          <FollowNotification
-            key={i}
-            avatar={n.avatar}
-            name={n.name}
-            username={n.username}
-            date={n.date}
+      {notifications.map((n: AppNotification) => {
+        const date = new Date(n.createdAt).toLocaleTimeString();
+
+        return (
+          <NotificationItem
+            key={n.id}
+            avatar={`https://i.pravatar.cc/150?img=${n.senderId}`}
+            name={n.senderUsername}
+            type={n.type}
+            date={date}
           />
-        ) : (
-          <LikeNotification
-            key={i}
-            avatar={n.avatar}
-            name={n.name}
-            username={n.username}
-            tweetContent={n.tweetContent!}
-            date={n.date}
-          />
-        )
-      )}
+        );
+      })}
     </Box>
   );
 }

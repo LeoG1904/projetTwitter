@@ -16,6 +16,7 @@ export const unlikeTweet = async (tweetId: number, token: string) => {
 export const fetchLikesCount = async (tweetId: number, token: string) => {
   return await getLikesCount(tweetId, token);
 };
+
 export const fetchHasLiked = async (tweetId: number, token: string) => {
   return await hasUserLiked(tweetId, token);
 };
