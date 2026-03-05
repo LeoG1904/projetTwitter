@@ -1,0 +1,9 @@
+.comment-list {
+  margin-top: 1rem;
+  &__loading {
+    color: gray;
+  }
+  &__error {
+    color: red;
+  }
+}

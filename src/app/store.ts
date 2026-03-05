@@ -3,13 +3,15 @@ import authReducer from "../domains/auth/slice";
 import userReducer from "../domains/users/slice";
 import tweetsReducer from "../domains/tweets/slice";
 import followReducer from "../domains/follow/slice";
+import commentReducer from "../domains/comment/slice";
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer, // ⚠️ important
+    auth: authReducer, 
     user: userReducer,
     tweets: tweetsReducer,
     follow: followReducer, 
+    comments: commentReducer,
   },
 });
 
