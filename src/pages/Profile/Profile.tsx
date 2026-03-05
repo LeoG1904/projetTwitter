@@ -77,8 +77,9 @@ export default function Profile() {
         username={`@${user.username}`}
         bio={user.bio || ""}
         avatar={user.avatar || ""}
-        userId={user.id}         // 🔹 important
+        userId={user.id}         
         isOwnProfile={isOwnProfile}
+        onSave={handleSave}
       />
       <ProfileStats
         tweets={userTweets.length || 0}

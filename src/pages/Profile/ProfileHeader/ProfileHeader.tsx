@@ -12,6 +12,7 @@ interface ProfileHeaderProps {
   avatar: string;
   userId: number;        // id du profil affiché
   isOwnProfile: boolean;
+  onSave?: (updatedUser: { name: string; bio: string }) => void; // 🔹 prop pour sauvegarder
 }
 
 export default function ProfileHeader({
@@ -21,6 +22,7 @@ export default function ProfileHeader({
   avatar,
   userId,
   isOwnProfile,
+  onSave,
 }: ProfileHeaderProps) {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
@@ -67,7 +69,10 @@ export default function ProfileHeader({
     }
   };
 
-  const handleSave = () => setIsEditing(false);
+  const handleSave = () => {
+    onSave?.(editValues);  // 🔹 appelle le parent pour sauvegarder
+    setIsEditing(false);
+  };
 
   return (
     <Box className="profile__header">
@@ -95,7 +100,7 @@ export default function ProfileHeader({
             variant={isFollowing ? "contained" : "outlined"}
             color={isFollowing ? "secondary" : "primary"}
             onClick={handleFollowToggle}
-            disabled={loading} // 🔹 optionnel: bloquer si requête en cours
+            disabled={loading}
           >
             {isFollowing ? "Unfollow" : "Follow"}
           </Button>
