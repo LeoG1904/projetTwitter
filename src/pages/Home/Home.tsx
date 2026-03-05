@@ -61,8 +61,6 @@ function Home() {
           key={tweet.id}
           tweet={tweet}                // ← on passe directement le tweet
           currentUser={user.username}  // ← compare avec owner.username dans TweetCard
-          onDelete={() => console.log("Supprimer tweet", tweet.id)}
-          onEdit={(id, newContent) => console.log("Edit tweet", id, newContent)}
         />
       ))}
     </div>

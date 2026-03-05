@@ -49,6 +49,7 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
         avatar={tweet.owner.avatar || ""}
         name={tweet.owner.name}
         username={tweet.owner.username}
+        userId={tweet.owner.id}           
         date={tweet.createdAt}
         isAuthor={isAuthor}
         onDelete={handleDelete}

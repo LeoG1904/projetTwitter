@@ -35,9 +35,6 @@ export default function ProfileInfo({ isEditing, values, onChange }: ProfileInfo
           <Typography variant="h5" className="profile__name">
             {values.name}
           </Typography>
-          <Typography variant="body2" className="profile__username">
-            {values.username}
-          </Typography>
           <Typography variant="body2" className="profile__bio">
             {values.bio}
           </Typography>

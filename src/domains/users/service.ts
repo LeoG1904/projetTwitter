@@ -29,3 +29,16 @@ export const updateProfile = async (token: string, data: Partial<UserProfile>): 
   if (!res.ok) throw new Error("Erreur update profile");
   return res.json();
 };
+
+// récupère les infos d’un user par son ID
+export const fetchUserById = async (token: string, userId: number): Promise<UserProfile> => {
+  const res = await fetch(`${API_URL}/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) throw new Error("Error fetching user by ID");
+  return res.json();
+};

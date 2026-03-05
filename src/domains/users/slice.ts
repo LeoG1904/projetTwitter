@@ -1,7 +1,6 @@
-
-import type { UserProfile } from "./types";
-import { fetchCurrentUser } from "./service";
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { UserProfile } from "./types";
+import { fetchCurrentUser, fetchUserById } from "./service";
 
 export const loadUser = createAsyncThunk(
   "user/loadUser",
@@ -11,6 +10,18 @@ export const loadUser = createAsyncThunk(
 
     try {
       return await fetchCurrentUser(token);
+    } catch (err: any) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+// 🔹 Nouveau thunk pour récupérer un profil par ID
+export const loadUserById = createAsyncThunk(
+  "user/loadUserById",
+  async ({ token, id }: { token: string; id: number }, thunkAPI) => {
+    try {
+      return await fetchUserById(token, id);
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.message);
     }
@@ -33,7 +44,6 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    // 🔹 ajouter setUserProfile
     setUserProfile: (state, action: PayloadAction<UserProfile>) => {
       state.profile = action.payload;
     },
@@ -52,10 +62,22 @@ const userSlice = createSlice({
         state.profile = null;
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(loadUserById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadUserById.fulfilled, (state, action) => {
+        state.profile = action.payload;
+        state.loading = false;
+      })
+      .addCase(loadUserById.rejected, (state, action) => {
+        state.profile = null;
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });
 
-// 🔹 exporter l’action pour pouvoir l’utiliser
 export const { setUserProfile } = userSlice.actions;
 export default userSlice.reducer;

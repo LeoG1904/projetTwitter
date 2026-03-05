@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Avatar, Button } from "@mui/material";
 import ProfileInfo from "../ProfileInfo/ProfileInfo";
 
@@ -7,8 +7,9 @@ interface ProfileHeaderProps {
   username: string;
   bio: string;
   avatar: string;
-  onFollow: () => void;
-  onSave: (updatedUser: { name: string; bio: string }) => void;
+  isOwnProfile: boolean; // 🔹 nouveau
+  onFollow?: () => void;
+  onSave?: (updatedUser: { name: string; bio: string }) => void;
 }
 
 export default function ProfileHeader({
@@ -16,18 +17,23 @@ export default function ProfileHeader({
   username,
   bio,
   avatar,
+  isOwnProfile,
   onFollow,
   onSave,
 }: ProfileHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValues, setEditValues] = useState({ name, bio });
 
+  useEffect(() => {
+    setEditValues({ name, bio }); // 🔹 reset si props changent
+  }, [name, bio]);
+
   const handleChange = (field: "name" | "bio", value: string) => {
     setEditValues({ ...editValues, [field]: value });
   };
 
   const handleSave = () => {
-    onSave(editValues);  // envoie uniquement nom + bio
+    onSave?.(editValues);
     setIsEditing(false);
   };
 
@@ -43,16 +49,17 @@ export default function ProfileHeader({
       </Box>
 
       <Box sx={{ display: "flex", gap: 1 }}>
-        {isEditing ? (
-          <>
-            <Button variant="contained" onClick={handleSave}>Save</Button>
-            <Button variant="outlined" onClick={() => setIsEditing(false)}>Cancel</Button>
-          </>
-        ) : (
-          <>
-            <Button variant="outlined" onClick={onFollow}>Follow</Button>
+        {isOwnProfile ? (
+          isEditing ? (
+            <>
+              <Button variant="contained" onClick={handleSave}>Save</Button>
+              <Button variant="outlined" onClick={() => setIsEditing(false)}>Cancel</Button>
+            </>
+          ) : (
             <Button variant="text" onClick={() => setIsEditing(true)}>Edit</Button>
-          </>
+          )
+        ) : (
+          <Button variant="outlined" onClick={onFollow}>Follow</Button>
         )}
       </Box>
     </Box>

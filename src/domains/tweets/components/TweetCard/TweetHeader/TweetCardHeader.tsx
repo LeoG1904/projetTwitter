@@ -13,6 +13,7 @@ import {
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { Link } from "react-router-dom"; // 🔹 pour les liens vers le profil
 
 import "./TweetCardHeader.scss";
 
@@ -20,6 +21,7 @@ interface TweetCardHeaderProps {
   avatar: string;
   name: string;
   username: string;
+  userId: number;          // 🔹 ID pour la navigation
   date: string;
   isAuthor: boolean;
   onDelete?: () => void;
@@ -30,6 +32,7 @@ export default function TweetCardHeader({
   avatar,
   name,
   username,
+  userId,
   date,
   isAuthor,
   onDelete,
@@ -43,7 +46,6 @@ export default function TweetCardHeader({
     const diff = Date.now() - createdAt.getTime();
 
     const minutes = Math.floor(diff / 60000);
-
     if (minutes < 1) return "just now";
     if (minutes < 60) return `${minutes}m`;
 
@@ -62,16 +64,21 @@ export default function TweetCardHeader({
   return (
     <>
       <Box className="tweet-card-header">
-        <Avatar src={avatar} className="tweet-card-header__avatar" />
+        {/* Avatar cliquable */}
+        <Link to={`/profile/${userId}`}>
+          <Avatar src={avatar} className="tweet-card-header__avatar" />
+        </Link>
 
         <Box className="tweet-card-header__info">
-          <Typography variant="subtitle2" className="tweet-card-header__name">
-            {name}
-          </Typography>
-
-          <Typography variant="caption" className="tweet-card-header__username">
-            @{username} · {formatDate(date)}
-          </Typography>
+          {/* Nom et pseudo cliquables */}
+          <Link to={`/profile/${userId}`} style={{ textDecoration: "none", color: "inherit" }}>
+            <Typography variant="subtitle2" className="tweet-card-header__name">
+              {name}
+            </Typography>
+            <Typography variant="caption" className="tweet-card-header__username">
+              {formatDate(date)}
+            </Typography>
+          </Link>
         </Box>
 
         {isAuthor && (
@@ -87,25 +94,17 @@ export default function TweetCardHeader({
         )}
       </Box>
 
+      {/* Dialog de confirmation */}
       <Dialog open={openConfirm} onClose={() => setOpenConfirm(false)}>
         <DialogTitle>Delete this tweet?</DialogTitle>
-
         <DialogContent>
           <Typography>
             Are you sure you want to delete this tweet? This action cannot be undone.
           </Typography>
         </DialogContent>
-
         <DialogActions>
-          <Button onClick={() => setOpenConfirm(false)}>
-            Cancel
-          </Button>
-
-          <Button
-            color="error"
-            variant="contained"
-            onClick={handleConfirmDelete}
-          >
+          <Button onClick={() => setOpenConfirm(false)}>Cancel</Button>
+          <Button color="error" variant="contained" onClick={handleConfirmDelete}>
             Delete
           </Button>
         </DialogActions>

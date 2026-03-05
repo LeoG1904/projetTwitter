@@ -3,6 +3,8 @@ import { Box, Typography, List, ListItemButton, ListItemIcon, ListItemText, Badg
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../app/store"; // chemin à ajuster si besoin
 
 import "./Sidebar.scss";
 
@@ -11,6 +13,11 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ notificationCount = 0 }: SidebarProps) {
+  const currentUser = useSelector((state: RootState) => state.user.profile);
+
+  // 🔹 Génère le lien vers le profil du user connecté
+  const profileLink = currentUser ? `/profile/${currentUser.id}` : "/profile";
+
   return (
     <Box className="sidebar">
       <Typography variant="h5" className="sidebar__logo">
@@ -33,7 +40,7 @@ export default function Sidebar({ notificationCount = 0 }: SidebarProps) {
         </NavLink>
 
         <NavLink
-          to="/profile/1"
+          to={profileLink} // 🔹 lien dynamique
           className={({ isActive }) =>
             isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
           }
@@ -54,7 +61,6 @@ export default function Sidebar({ notificationCount = 0 }: SidebarProps) {
         >
           <ListItemButton>
             <ListItemIcon>
-              {/* Badge pour le nombre de notifications */}
               <Badge badgeContent={notificationCount} color="error">
                 <NotificationsIcon />
               </Badge>
