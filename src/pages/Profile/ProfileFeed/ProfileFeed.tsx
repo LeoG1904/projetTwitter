@@ -13,7 +13,7 @@ export default function ProfileFeed({ userId, currentUser }: ProfileFeedProps) {
 
   if (loading) return <p>Loading tweets...</p>;
 
-  // 🔹 Filtrer les tweets du user avec userId passé en props
+  //   Filtrer les tweets du user avec userId passé en props
   const userTweets = tweets.filter(tweet => tweet.owner.id === userId);
 
   if (!userTweets.length) return <p>Pas encore de tweets.</p>;

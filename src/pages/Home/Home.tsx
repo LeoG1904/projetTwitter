@@ -16,47 +16,47 @@ import TweetFilter from "../../domains/tweets/components/TweetFilter/TweetFilter
 function Home() {
   const dispatch = useAppDispatch();
 
-  // 🔹 User depuis Redux
+  //   User depuis Redux
   const { profile: user, loading: userLoading } = useSelector(
     (state: RootState) => state.user
   );
 
-  // 🔹 Tweets depuis Redux
+  //   Tweets depuis Redux
   const { tweets = [], loading: tweetsLoading } = useSelector(
     (state: RootState) => state.tweets
   );
 
-  // 🔹 Auth token
+  //   Auth token
   const { token } = useSelector((state: RootState) => state.auth);
 
-  // 🔹 Filtre et ordre locaux pour combiner
+  //   Filtre et ordre locaux pour combiner
   const [currentFilter, setCurrentFilter] = useState<"all" | "following">("all");
   const [currentOrder, setCurrentOrder] = useState<"date" | "likes" | "retweets" | "replies">("date");
 
-  // 🔹 Charger le user si non présent
+  //   Charger le user si non présent
   useEffect(() => {
     if (!user) dispatch(loadUser());
   }, [user, dispatch]);
 
-  // 🔹 Charger les tweets dès que le user, le token, le filtre ou l’ordre changent
+  //   Charger les tweets dès que le user, le token, le filtre ou l’ordre changent
   useEffect(() => {
     if (user && token) {
       dispatch(fetchFilteredTweetsThunk({ filter: currentFilter, order: currentOrder, token }));
     }
   }, [user, token, currentFilter, currentOrder, dispatch]);
 
-  // 🔹 Gestion de l’envoi d’un nouveau tweet
+  //   Gestion de l’envoi d’un nouveau tweet
   const handleTweet = (content: string) => {
     if (!token) return;
     dispatch(createTweetThunk({ payload: { content }, token }));
   };
 
-  // 🔹 Changer le filtre (all / following)
+  //   Changer le filtre (all / following)
   const handleFilterChange = (filter: "all" | "following") => {
     setCurrentFilter(filter);
   };
 
-  // 🔹 Gérer l’ordre
+  //   Gérer l’ordre
   const handleOrderChange = (order: "date" | "likes" | "retweets" | "replies") => {
     setCurrentOrder(order);
   };

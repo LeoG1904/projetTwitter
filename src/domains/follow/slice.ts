@@ -16,7 +16,7 @@ const initialState: FollowState = {
   isFollowingTarget: false,
 };
 
-// 🔹 Thunks
+//   Thunks
 export const follow = createAsyncThunk(
   "follow/followUser",
   async ({ request, token }: { request: FollowRequest; token: string }) => {
@@ -45,7 +45,7 @@ export const fetchIsFollowing = createAsyncThunk(
   }
 );
 
-// 🔹 Slice
+//   Slice
 const followSlice = createSlice({
   name: "follow",
   initialState,

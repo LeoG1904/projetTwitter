@@ -17,7 +17,7 @@ const initialState: TweetsState = {
 // THUNKS
 // ========================
 
-// 🔹 Fetch all tweets
+//   Fetch all tweets
 export const fetchTweetsThunk = createAsyncThunk(
   "tweets/fetchAll",
   async (token: string, { rejectWithValue }) => {
@@ -29,7 +29,7 @@ export const fetchTweetsThunk = createAsyncThunk(
   }
 );
 
-// 🔹 Create new tweet
+//   Create new tweet
 export const createTweetThunk = createAsyncThunk(
   "tweets/create",
   async (
@@ -44,7 +44,7 @@ export const createTweetThunk = createAsyncThunk(
   }
 );
 
-// 🔹 Fetch tweets by user
+//   Fetch tweets by user
 export const fetchUserTweetsThunk = createAsyncThunk(
   "tweets/fetchByUser",
   async ({ userId, token }: { userId: number; token: string }, { rejectWithValue }) => {
@@ -56,7 +56,7 @@ export const fetchUserTweetsThunk = createAsyncThunk(
   }
 );
 
-// 🔹 Delete a tweet
+//   Delete a tweet
 export const deleteTweetThunk = createAsyncThunk(
   "tweets/delete",
   async ({ tweetId, token }: { tweetId: number; token: string }, { rejectWithValue }) => {
@@ -69,7 +69,7 @@ export const deleteTweetThunk = createAsyncThunk(
   }
 );
 
-// 🔹 Update a tweet
+//   Update a tweet
 export const updateTweetThunk = createAsyncThunk(
   "tweets/update",
   async (
@@ -84,7 +84,7 @@ export const updateTweetThunk = createAsyncThunk(
   }
 );
 
-// 🔹 Like a tweet
+//   Like a tweet
 export const likeTweetThunk = createAsyncThunk(
   "tweets/like",
   async ({ tweetId, token }: { tweetId: number; token: string }, { rejectWithValue }) => {
@@ -96,7 +96,7 @@ export const likeTweetThunk = createAsyncThunk(
   }
 );
 
-// 🔹 Unlike a tweet
+//   Unlike a tweet
 export const unlikeTweetThunk = createAsyncThunk(
   "tweets/unlike",
   async ({ tweetId, token }: { tweetId: number; token: string }, { rejectWithValue }) => {
@@ -108,7 +108,7 @@ export const unlikeTweetThunk = createAsyncThunk(
   }
 );
 
-// 🔹 Fetch tweets avec filtre
+//   Fetch tweets avec filtre
 export const fetchFilteredTweetsThunk = createAsyncThunk(
   "tweets/fetchFiltered",
   async (

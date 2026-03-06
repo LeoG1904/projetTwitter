@@ -12,7 +12,7 @@ interface ProfileHeaderProps {
   avatar: string;
   userId: number;        // id du profil affiché
   isOwnProfile: boolean;
-  onSave?: (updatedUser: { name: string; bio: string }) => void; // 🔹 prop pour sauvegarder
+  onSave?: (updatedUser: { name: string; bio: string }) => void; //   prop pour sauvegarder
 }
 
 export default function ProfileHeader({
@@ -32,16 +32,16 @@ export default function ProfileHeader({
   const [editValues, setEditValues] = useState({ name, bio });
   const [isFollowing, setIsFollowing] = useState(false);
 
-  // 🔹 reset editValues quand props changent
+  //   reset editValues quand props changent
   useEffect(() => setEditValues({ name, bio }), [name, bio]);
 
-  // 🔹 fetch si currentUser suit ce profil
+  //   fetch si currentUser suit ce profil
   useEffect(() => {
     if (!token) return;
     dispatch(fetchIsFollowing({ targetUserId: userId, token }));
   }, [userId, token, dispatch]);
 
-  // 🔹 synchroniser le local state avec le store
+  //   synchroniser le local state avec le store
   useEffect(() => {
     setIsFollowing(isFollowingTarget);
   }, [isFollowingTarget]);
@@ -70,7 +70,7 @@ export default function ProfileHeader({
   };
 
   const handleSave = () => {
-    onSave?.(editValues);  // 🔹 appelle le parent pour sauvegarder
+    onSave?.(editValues);  //   appelle le parent pour sauvegarder
     setIsEditing(false);
   };
 

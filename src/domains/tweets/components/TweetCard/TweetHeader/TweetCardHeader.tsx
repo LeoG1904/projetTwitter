@@ -13,7 +13,7 @@ import {
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Link } from "react-router-dom"; // 🔹 pour les liens vers le profil
+import { Link } from "react-router-dom"; //   pour les liens vers le profil
 
 import "./TweetCardHeader.scss";
 
@@ -21,7 +21,7 @@ interface TweetCardHeaderProps {
   avatar: string;
   name: string;
   username: string;
-  userId: number;          // 🔹 ID pour la navigation
+  userId: number;          //   ID pour la navigation
   date: string;
   isAuthor: boolean;
   onDelete?: () => void;

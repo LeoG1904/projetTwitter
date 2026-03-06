@@ -17,7 +17,7 @@ export const unfollowUser = async (request: FollowRequest, token: string): Promi
   return res.data;
 };
 
-// 🔹 Récupérer la liste des IDs suivis par un user
+//   Récupérer la liste des IDs suivis par un user
 export const getFollowingIds = async (userId: number, token: string): Promise<FollowingIdsResponse> => {
   const res = await axios.get<FollowingIdsResponse>(`${API_URL}/following/${userId}`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -25,7 +25,7 @@ export const getFollowingIds = async (userId: number, token: string): Promise<Fo
   return res.data;
 };
 
-// 🔹 Vérifier si le current user suit un target
+//   Vérifier si le current user suit un target
 export const isFollowing = async (targetUserId: number, token: string): Promise<FollowCheckResponse> => {
   const res = await axios.get<FollowCheckResponse>(`${API_URL}/check`, {
     headers: { Authorization: `Bearer ${token}` },

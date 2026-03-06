@@ -40,7 +40,7 @@ export default function TweetCard({ tweet, currentUser }: TweetCardProps) {
   const isAuthor = currentUser === tweet.owner.username;
   const commentCount = commentsByTweet[tweet.id]?.length ?? tweet.commentCount ?? 0;
 
-  // 🔹 Initial fetch of likes and whether the user has liked this tweet
+  //   Initial fetch of likes and whether the user has liked this tweet
   useEffect(() => {
     if (token) {
       dispatch(getLikesCountThunk({ tweetId: tweet.id, token }));

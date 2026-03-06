@@ -16,7 +16,7 @@ export const loadUser = createAsyncThunk(
   }
 );
 
-// 🔹 Nouveau thunk pour récupérer un profil par ID
+//   Nouveau thunk pour récupérer un profil par ID
 export const loadUserById = createAsyncThunk(
   "user/loadUserById",
   async ({ token, id }: { token: string; id: number }, thunkAPI) => {

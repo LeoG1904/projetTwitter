@@ -15,7 +15,7 @@ import "./Profile.scss";
 
 export default function Profile() {
   const dispatch = useAppDispatch();
-  const { id } = useParams<{ id: string }>(); // 🔹 récupérer l'id depuis l'URL
+  const { id } = useParams<{ id: string }>(); //   récupérer l'id depuis l'URL
   const currentUser = useSelector((state: RootState) => state.user.profile);
   const { tweets } = useSelector((state: RootState) => state.tweets);
   const token = localStorage.getItem("token") || "";
@@ -25,7 +25,7 @@ export default function Profile() {
 
   const isOwnProfile = currentUser?.id === Number(id);
 
-  // 🔹 Charger les infos du user (soit connecté soit autre profil)
+  //   Charger les infos du user (soit connecté soit autre profil)
   useEffect(() => {
     const loadUser = async () => {
       if (!id) return;
@@ -47,7 +47,7 @@ export default function Profile() {
     loadUser();
   }, [id, currentUser, isOwnProfile, token]);
 
-  // 🔹 Charger les tweets de ce user
+  //   Charger les tweets de ce user
   useEffect(() => {
     if (user && token) {
       dispatch(fetchUserTweetsThunk({ userId: user.id, token }));

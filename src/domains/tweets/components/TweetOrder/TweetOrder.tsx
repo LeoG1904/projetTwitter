@@ -2,7 +2,7 @@ import { Box, Select, MenuItem } from "@mui/material";
 import "./TweetOrder.scss";
 
 interface TweetOrderProps {
-  order: "date" | "likes" | "retweets" | "replies"; // 🔹 ordre contrôlé
+  order: "date" | "likes" | "retweets" | "replies"; //   ordre contrôlé
   onChange: (order: "date" | "likes" | "retweets" | "replies") => void;
 }
 
